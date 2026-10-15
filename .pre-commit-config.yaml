@@ -1,0 +1,54 @@
+# Hooks executados antes de cada commit (segunda camada de proteção, além do .gitignore).
+# Também pegam arquivos adicionados com `git add -f`, que ignoram o .gitignore.
+#
+# Instalação (uma vez por clone, cada integrante):
+#   pip install pre-commit
+#   pre-commit install
+# Verificar o repositório inteiro:
+#   pre-commit run --all-files
+#
+# Nunca usar `git commit --no-verify` para contornar estes hooks.
+repos:
+  - repo: local
+    hooks:
+      - id: bloquear-dados-privados
+        name: Bloquear dados privados (fotos, embeddings, checkpoints, termos)
+        language: fail
+        entry: >-
+          Arquivo possivelmente PRIVADO no commit. Fotos, vídeos, embeddings,
+          bancos, checkpoints e termos de consentimento não podem ir para o
+          GitHub (ver docs/privacy.md). Tire do stage com: git restore --staged <arquivo>
+        files: |
+          (?ix)(
+              ^data/(?!README\.md$)
+            | (^|/)(faces|embeddings|database|checkpoints|consent|consentimento|termos|runs|mlruns|wandb)/
+            | \.(jpe?g|heic|heif|bmp|tiff?|webp|gif|mp4|avi|mov|mkv|webm)$
+            | \.(npy|npz|pkl|pickle|joblib|h5|hdf5|faiss|index)$
+            | \.(pt|pth|ckpt|onnx|safetensors|bin|tflite)$
+            | \.(db|sqlite3?)$
+            | \.(pdf|docx?)$
+          )
+
+      - id: png-somente-em-reports-figures
+        name: PNG apenas em reports/figures (gráficos agregados)
+        language: fail
+        entry: >-
+          PNG fora de reports/figures/. Imagens com rostos não podem ser
+          versionadas; gráficos agregados devem ficar em reports/figures/.
+        files: (?i)\.png$
+        exclude: ^reports/figures/
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: detect-private-key
+      - id: check-merge-conflict
+
+  # Notebooks guardam as saídas das células, inclusive imagens exibidas
+  # (ex.: um rosto recortado). Remove as saídas antes do commit.
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout

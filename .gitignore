@@ -1,0 +1,104 @@
+# =====================================================================
+# DADOS PRIVADOS (LGPD) — nunca versionar
+# Fotografias, vídeos, embeddings, bancos biométricos, checkpoints
+# derivados de dados privados e termos de consentimento.
+# Ver docs/privacy.md. Esta é UMA das camadas de proteção; o hook de
+# pre-commit (.pre-commit-config.yaml) é a outra.
+# =====================================================================
+
+# Tudo em data/ é ignorado, exceto o README com instruções
+data/*
+!data/README.md
+
+# Diretórios privados em qualquer nível
+faces/
+embeddings/
+database/
+checkpoints/
+consent/
+consentimento/
+termos/
+
+# Fotos e vídeos (gráficos agregados vão em reports/figures/, em PNG/SVG)
+*.jpg
+*.jpeg
+*.JPG
+*.JPEG
+*.heic
+*.heif
+*.bmp
+*.tif
+*.tiff
+*.webp
+*.gif
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# Embeddings, vetores e índices
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.faiss
+*.index
+
+# Pesos de modelos (modelos públicos são referenciados pela URL oficial)
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+*.bin
+*.tflite
+
+# Bancos de dados locais (cadastro de pessoas)
+*.db
+*.sqlite
+*.sqlite3
+
+# Documentos que podem ser termos assinados/digitalizados
+*.pdf
+*.doc
+*.docx
+
+# Logs de treino e tracking (podem conter imagens e resultados individuais)
+runs/
+mlruns/
+wandb/
+lightning_logs/
+outputs/
+*.log
+
+# =====================================================================
+# Python e ambiente
+# =====================================================================
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Editores e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configurações locais do Claude Code (as compartilhadas ficam em .claude/settings.json)
+.claude/settings.local.json

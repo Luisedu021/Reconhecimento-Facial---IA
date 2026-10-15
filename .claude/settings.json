@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Read(data/private/**)",
+      "Edit(data/private/**)",
+      "Read(**/faces/**)",
+      "Read(**/embeddings/**)",
+      "Read(**/database/**)",
+      "Read(**/checkpoints/**)",
+      "Read(**/consent/**)",
+      "Read(**/consentimento/**)",
+      "Read(**/termos/**)",
+      "Read(**/*.jpg)",
+      "Read(**/*.JPG)",
+      "Read(**/*.jpeg)",
+      "Read(**/*.JPEG)",
+      "Read(**/*.heic)",
+      "Read(**/*.heif)",
+      "Read(**/*.bmp)",
+      "Read(**/*.webp)",
+      "Read(**/*.tif)",
+      "Read(**/*.tiff)",
+      "Read(**/*.gif)",
+      "Read(**/*.mp4)",
+      "Read(**/*.mov)",
+      "Read(**/*.avi)",
+      "Read(**/*.npy)",
+      "Read(**/*.npz)",
+      "Read(**/*.pkl)",
+      "Read(**/*.db)",
+      "Read(**/*.sqlite)",
+      "Read(**/*.sqlite3)",
+      "Read(**/*.pdf)",
+      "Read(**/*.docx)",
+      "Read(.env)"
+    ]
+  }
+}
