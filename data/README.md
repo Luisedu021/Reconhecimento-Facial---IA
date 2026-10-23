@@ -28,6 +28,7 @@ Baixe sempre da **fonte oficial** e leia os termos de uso antes. Não redistribu
 ## Dataset privado (coleta local)
 
 Só entram pessoas **adultas** que assinaram o Termo de Consentimento (Anexo A do enunciado).
+Modelo de convite e cuidados na coleta: [docs/convite-participantes.md](../docs/convite-participantes.md).
 Os termos ficam guardados **fora** deste repositório e fora de serviços de nuvem.
 
 Organização sugerida, com IDs pseudônimos (sem nomes nos caminhos):

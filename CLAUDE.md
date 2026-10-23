@@ -25,6 +25,7 @@ Dados biométricos são dados pessoais sensíveis (LGPD, art. 5º, II). Violar e
 
 ## 2. Fluxo de trabalho (Spec-Driven Development)
 
+0. Os requisitos do sistema estão em `docs/requirements.md` e o cronograma em `docs/plano.md`.
 1. Toda implementação parte de uma spec em `docs/specs/NNN-nome.md` (modelo: `000-template.md`).
    Se não houver spec para o pedido, proponha uma antes de escrever código.
 2. Antes de implementar, apresente um plano curto e espere aprovação.

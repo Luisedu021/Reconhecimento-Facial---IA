@@ -29,6 +29,8 @@ Imagem → Detecção da face → Alinhamento → Rede neural → Embedding → 
 ├── reports/figures/     gráficos AGREGADOS (únicos PNG permitidos no repositório)
 ├── data/README.md       como obter os dados (nenhum dado é versionado)
 └── docs/
+    ├── requirements.md  requisitos funcionais e não funcionais
+    ├── plano.md         cronograma e escopo da Parte 1
     ├── specs/           especificações com critérios de aceitação
     ├── decisions/       ADRs (decisões de arquitetura)
     └── privacy.md       inventário de dados, regras de LGPD e checklist de entrega
