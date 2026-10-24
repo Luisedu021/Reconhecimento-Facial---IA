@@ -1,0 +1,18 @@
+base: base.yaml
+experiment: E02
+hypothesis: >-
+  Ajustar só as camadas finais (block8 + camada de embedding) com ArcFace loss no CelebA
+  deixa os embeddings mais discriminativos que o baseline, sem esquecer o que o modelo já sabe.
+train:
+  strategy: partial        # none | partial | full
+  loss: arcface            # arcface | triplet
+  arcface: {s: 64.0, m: 0.5}
+  epochs: 5
+  warmup_epochs: 1         # 1a época: só a cabeça ArcFace (pesos novos) treina
+  batch_size: 64
+  lr: 1.0e-4               # camadas finais pré-treinadas
+  lr_backbone: 1.0e-5      # usado só no fine-tuning completo
+  lr_head: 1.0e-3          # cabeça ArcFace (pesos novos, aleatórios)
+  weight_decay: 5.0e-4
+  num_workers: 2
+  selection_metric: eer    # melhor época = menor EER na validação

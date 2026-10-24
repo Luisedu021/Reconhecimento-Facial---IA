@@ -29,6 +29,7 @@ Imagem → Detecção da face → Alinhamento → Rede neural → Embedding → 
 ├── reports/figures/     gráficos AGREGADOS (únicos PNG permitidos no repositório)
 ├── data/README.md       como obter os dados (nenhum dado é versionado)
 └── docs/
+    ├── enunciado-parte1.md  enunciado da disciplina (fonte dos requisitos)
     ├── requirements.md  requisitos funcionais e não funcionais
     ├── plano.md         cronograma e escopo da Parte 1
     ├── specs/           especificações com critérios de aceitação
@@ -38,14 +39,45 @@ Imagem → Detecção da face → Alinhamento → Rede neural → Embedding → 
 
 ## Como reproduzir
 
-> _A preencher quando o ambiente estiver definido (versão do Python, gerenciador de dependências, comandos)._
-
-Configuração obrigatória após clonar (instala o hook que bloqueia dados privados no commit):
+Ambiente usado: Windows 11, Python 3.10, PyTorch 2.2.2 com CUDA 12.1, GPU NVIDIA RTX A1000 (4 GB).
+Todas as versões estão fixadas em [requirements.txt](requirements.txt).
 
 ```bash
-pip install pre-commit
+py -3.10 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+pip install -e .
 pre-commit install
 ```
+
+O `pre-commit install` é obrigatório: instala o hook que bloqueia dados privados no commit.
+
+Depois de baixar os datasets ([data/README.md](data/README.md)), os experimentos rodam nesta ordem.
+O protocolo completo está na [SPEC-001](docs/specs/001-protocolo-experimental.md).
+
+```bash
+# 1. Detecção e recorte das faces (uma vez por dataset)
+python -m facerec.preprocess --dataset lfw
+python -m facerec.preprocess --dataset celeba
+python -m facerec.overlap                     # remove quase-duplicatas CelebA x LFW
+
+# 2. Experimentos públicos (validação no CelebA, teste no LFW)
+python -m facerec.evaluate --config configs/e01.yaml
+python -m facerec.train    --config configs/e02.yaml
+python -m facerec.evaluate --config configs/e02.yaml
+python -m facerec.train    --config configs/e03.yaml
+python -m facerec.evaluate --config configs/e03.yaml
+
+# 3. Dataset privado (local, saída só agregada)
+python -m facerec.preprocess --dataset private
+python -m facerec.evaluate_private --config configs/e04.yaml
+
+# Testes (dados sintéticos)
+pytest
+```
+
+As métricas vão para `reports/results.csv`, os thresholds para `reports/thresholds.json` e os gráficos
+agregados para `reports/figures/`.
 
 ## Datasets
 

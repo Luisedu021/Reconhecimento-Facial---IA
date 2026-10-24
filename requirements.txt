@@ -1,0 +1,15 @@
+# Versões fixas para reprodutibilidade (item 34).
+# torch/torchvision vêm do índice oficial do PyTorch com CUDA 12.1.
+# facenet-pytorch 2.6.0 exige torch 2.2, torchvision 0.17, numpy < 2 e Pillow 10.2.
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.2.2+cu121
+torchvision==0.17.2+cu121
+facenet-pytorch==2.6.0
+numpy==1.26.4
+pillow==10.2.0
+scikit-learn==1.5.2
+matplotlib==3.9.2
+pyyaml==6.0.2
+tqdm==4.66.5
+pytest==8.3.3
+pre-commit==3.8.0

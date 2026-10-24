@@ -1,0 +1,6 @@
+base: base.yaml
+experiment: E01
+hypothesis: >-
+  O InceptionResnetV1 pré-treinado no VGGFace2, sem nenhum ajuste, já separa bem
+  a mesma pessoa de pessoas diferentes e serve de linha de base.
+# Sem bloco `train`: só avaliação.

@@ -1,0 +1,38 @@
+# Configuração comum a todos os experimentos (SPEC-001). Cada eNN.yaml declara só o que muda.
+seed: 42
+
+paths:
+  lfw_images: data/public/lfw/lfw            # pastas <Nome>/<Nome>_0001.jpg
+  lfw_pairs: data/public/lfw/pairs.txt       # View 2: 10 folds
+  celeba_images: data/public/celeba/img_align_celeba
+  celeba_identities: data/public/celeba/identity_CelebA.txt
+  private_images: data/private               # data/private/P01/S1/*.jpg (fora do Git)
+  public_cache: data/public/cache
+  private_cache: data/private/cache
+  checkpoints: checkpoints
+  reports: reports
+
+preprocess:
+  image_size: 160        # entrada do InceptionResnetV1
+  margin: 14             # pixels de margem em volta do rosto antes de redimensionar
+  min_face_size: 20
+  batch_size: 64
+
+celeba:
+  num_identities: 1000
+  min_images: 20         # só identidades com pelo menos 20 fotos
+  max_images: 20
+  val_fraction: 0.1      # ~100 identidades só para validação
+  val_pairs_per_class: 3000
+  overlap_threshold: 0.9 # CA-4: cosseno acima disso com o LFW = quase-duplicata
+
+model:
+  pretrained: vggface2   # pesos públicos do facenet-pytorch (referenciados, não versionados)
+
+threshold:
+  criterion: far         # far | eer (decisão final no ADR-003)
+  far_target: 0.01
+
+eval:
+  batch_size: 128
+  lfw_unknown_probes: 500

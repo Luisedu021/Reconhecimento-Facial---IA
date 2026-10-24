@@ -1,0 +1,42 @@
+# E04 — Melhor modelo no dataset privado (resultados agregados)
+
+- **Data:** _AAAA-MM-DD_
+- **Responsável:** _nome_
+- **Config:** [`configs/e04.yaml`](../configs/e04.yaml)
+- **Modelo avaliado:** _vencedor de E01–E03 pela validação (ADR-001)_
+
+## Hipótese
+
+O melhor modelo de E01–E03, com o threshold escolhido na validação do CelebA, reconhece as pessoas
+cadastradas e rejeita desconhecidos também nas selfies reais do grupo.
+
+## Configuração
+
+| Item | Valor |
+|---|---|
+| Cadastro | 2 fotos por pessoa (sessão S1) |
+| Consulta | 3 fotos por pessoa (sessão S2, outro dia) |
+| Comparação | protótipo (média do cadastro) + cosseno × k-NN (k = 1) |
+| Threshold | o do modelo escolhido, vindo de `reports/thresholds.json` (não é ajustado aqui) |
+| Desconhecidos | rodízio (cada pessoa fica uma vez fora do cadastro) + 500 rostos do LFW |
+
+## Dados
+
+5 adultos com termo assinado, 25 fotos. Nada privado sai da máquina; embeddings só em memória.
+
+## Resultados (agregados)
+
+| Métrica | Protótipo | k-NN |
+|---|---|---|
+| Acerto rank-1 | | |
+| Aceitação correta (cadastrados) | | |
+| Identificação errada aceita | | |
+| FRR (cadastrado rejeitado) | | |
+| Rejeição correta de desconhecidos (rodízio) | | |
+| Rejeição correta de desconhecidos (LFW) | | |
+
+Gráfico: `reports/figures/E04-privado-similaridade.png`.
+
+## Interpretação
+
+_A preencher. Limitação: amostra pequena (15 consultas); os números indicam tendência, não precisão estatística._

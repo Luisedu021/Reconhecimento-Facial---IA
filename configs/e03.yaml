@@ -1,0 +1,7 @@
+base: e02.yaml
+experiment: E03
+hypothesis: >-
+  Atualizar a rede inteira (learning rate 10x menor no backbone) adapta melhor ao domínio
+  que o fine-tuning parcial, mas com mais custo e risco de overfitting.
+train:
+  strategy: full           # batch 64 herdado do E02: cabe nos 4 GB (~1 GB medido com batch 32)

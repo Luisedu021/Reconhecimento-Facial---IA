@@ -5,7 +5,7 @@
 
 > Como preencher: escreva cada requisito como "O sistema deve…". Requisito não funcional sempre com
 > **número e forma de medir** ("rápido" não é requisito; "≤ 500 ms por imagem na CPU do notebook" é).
-> A coluna **Origem** diz de onde veio: um item do enunciado ou uma decisão do grupo.
+> A coluna **Origem** diz de onde veio: um item do [enunciado](enunciado-parte1.md) ou uma decisão do grupo.
 
 ## 1. Problema e cenário de uso
 

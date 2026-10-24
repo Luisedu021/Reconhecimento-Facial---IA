@@ -1,0 +1,10 @@
+base: e02.yaml
+experiment: E05
+hypothesis: >-
+  Com o mesmo fine-tuning parcial do E02, a Triplet loss (comparação direta entre pares)
+  gera embeddings piores que a ArcFace, que usa todas as identidades em cada passo.
+train:
+  loss: triplet
+  triplet: {margin: 0.2}
+  pk: {p: 16, k: 4}        # batch = 16 pessoas x 4 fotos = 64
+  warmup_epochs: 0         # sem cabeça nova para aquecer

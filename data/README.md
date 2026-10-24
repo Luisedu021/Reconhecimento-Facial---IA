@@ -18,12 +18,16 @@ data/
 
 Baixe sempre da **fonte oficial** e leia os termos de uso antes. Não redistribua os arquivos.
 
-| Dataset | Fonte oficial | Destino local |
-|---|---|---|
-| LFW | http://vis-www.cs.umass.edu/lfw/ | `data/public/lfw/` |
-| CelebA | https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html | `data/public/celeba/` |
+| Dataset | Fonte oficial | Arquivos necessários | Onde colocar |
+|---|---|---|---|
+| LFW | http://vis-www.cs.umass.edu/lfw/ | `lfw.tgz` (todas as imagens) e `pairs.txt` (View 2) | extrair em `data/public/lfw/` → `data/public/lfw/lfw/<Nome>/<Nome>_0001.jpg`; `data/public/lfw/pairs.txt` |
+| CelebA | https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html (link para o Google Drive oficial) | `Img/img_align_celeba.zip` e `Anno/identity_CelebA.txt` | extrair em `data/public/celeba/img_align_celeba/`; `data/public/celeba/identity_CelebA.txt` |
 
-> _Instruções detalhadas de download (arquivos necessários, script, checagem de integridade) a preencher._
+Baixe pelo navegador: o download automático do CelebA costuma falhar por limite de cota do Google Drive.
+Os caminhos podem ser trocados em [configs/base.yaml](../configs/base.yaml).
+
+O pré-processamento (`python -m facerec.preprocess`) grava os rostos recortados em `data/public/cache/`
+e a divisão treino/validação do CelebA em `data/public/cache/celeba/split.csv`.
 
 ## Dataset privado (coleta local)
 
@@ -41,6 +45,10 @@ data/private/
     └── S2/          sessão de captura 2 (outro dia/local)
 ```
 
+- Formatos aceitos: JPG ou PNG (HEIC do iPhone precisa ser convertido antes).
+- O pré-processamento grava os recortes em `data/private/cache/` (também fora do Git). Os embeddings
+  das fotos privadas **não** são gravados em disco: são calculados em memória a cada avaliação.
+- Para excluir uma pessoa: apagar `data/private/<ID>/` e `data/private/cache/<ID>/`.
 - A tabela que liga `P01` ao nome real fica **junto dos termos**, nunca no repositório.
 - Separar treino/validação/teste **por sessão** evita fotos quase idênticas em conjuntos diferentes.
 - Variar iluminação, pose, distância, expressão, fundo e uso de óculos.
