@@ -3,7 +3,7 @@
 - **Status:** rascunho
 - **Parte:** 1 (experimentação)
 - **Responsáveis:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
-- **Relacionados:** ADR-001 (modelo), ADR-003 (threshold), E01–E05, [requirements.md](../requirements.md)
+- **Relacionados:** [ADR-001](../decisions/ADR-001-face-model.md) (modelo), [ADR-003](../decisions/ADR-003-recognition-threshold.md) (threshold), E01–E05, [requirements.md](../requirements.md)
 
 ## Problema
 
@@ -109,5 +109,5 @@ variação de cor). A melhor época é a de menor EER na validação. Valores fi
 
 ## Em aberto
 
-- [ ] FAR-alvo para escolher o threshold (ex.: 1%) ou critério EER → decidir no ADR-003.
-- [ ] Confirmar licença dos pesos VGGFace2 usados pelo `facenet-pytorch` → registrar no ADR-001.
+- [x] FAR-alvo para escolher o threshold: FAR ≤ 1% na validação, decidido no [ADR-003](../decisions/ADR-003-recognition-threshold.md).
+- [ ] Confirmar licença do código e dos pesos VGGFace2 do `facenet-pytorch` → registrar no [ADR-001](../decisions/ADR-001-face-model.md).

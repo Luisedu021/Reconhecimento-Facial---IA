@@ -30,7 +30,7 @@ model:
   pretrained: vggface2   # pesos públicos do facenet-pytorch (referenciados, não versionados)
 
 threshold:
-  criterion: far         # far | eer (decisão final no ADR-003)
+  criterion: far         # FAR <= 1% na validação, decidido no ADR-003
   far_target: 0.01
 
 eval:

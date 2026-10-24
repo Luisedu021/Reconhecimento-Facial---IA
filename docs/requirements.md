@@ -49,7 +49,7 @@ Prioridade: **obrigatório** (exigido pelo enunciado) · **desejável** · **opc
 
 | ID | Categoria | Requisito | Como medir | Origem |
 |---|---|---|---|---|
-| RNF-01 | Qualidade do reconhecimento | _FAR máxima aceitável: …_ | _taxa no conjunto de teste_ | grupo |
+| RNF-01 | Qualidade do reconhecimento | O sistema deve aceitar no máximo 1% das pessoas não cadastradas (FAR ≤ 1%), com o threshold fixado na validação | FAR nos pares de validação do CelebA, onde o threshold é escolhido; depois reportada no LFW e no dataset privado (agregado) | grupo ([ADR-003](decisions/ADR-003-recognition-threshold.md)) |
 | RNF-02 | Qualidade do reconhecimento | _FRR máxima aceitável: …_ | | grupo |
 | RNF-03 | Desempenho | _Tempo por imagem ou FPS na câmera: …_ | | grupo |
 | RNF-04 | Privacidade | _Dados privados processados só localmente: …_ | | item 23 |
@@ -63,7 +63,8 @@ Prioridade: **obrigatório** (exigido pelo enunciado) · **desejável** · **opc
 Respostas que ainda faltam para fechar os requisitos acima.
 
 - [ ] Entrada: foto enviada, câmera em tempo real ou as duas?
-- [ ] Qual erro é pior no cenário: aceitar um desconhecido (FAR) ou rejeitar um cadastrado (FRR)?
+- [x] Qual erro é pior no cenário: aceitar um desconhecido (FAR) ou rejeitar um cadastrado (FRR)?
+  **Aceitar um desconhecido** — por isso FAR ≤ 1% (RNF-01, ADR-003).
 - [ ] Quantas pessoas cadastradas e quantas fotos por pessoa no cadastro?
 - [ ] Onde a aplicação roda: CPU ou GPU?
 - [ ] Interface: web, desktop ou outra?
