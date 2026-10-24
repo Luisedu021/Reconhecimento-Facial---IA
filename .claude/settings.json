@@ -4,6 +4,8 @@
     "deny": [
       "Read(data/private/**)",
       "Edit(data/private/**)",
+      "Read(**/dataset/**)",
+      "Read(**/datasets/**)",
       "Read(**/faces/**)",
       "Read(**/embeddings/**)",
       "Read(**/database/**)",

@@ -8,7 +8,7 @@ Desenvolvido com Spec-Driven Development: requisitos e decisões ficam em `docs/
 
 Dados biométricos são dados pessoais sensíveis (LGPD, art. 5º, II). Violar estas regras zera o trabalho.
 
-- **Nunca** ler, abrir, listar o conteúdo, copiar ou processar arquivos em `data/private/`, `faces/`,
+- **Nunca** ler, abrir, listar o conteúdo, copiar ou processar arquivos em `data/private/`, `dataset/`, `faces/`,
   `embeddings/`, `database/`, `checkpoints/`, `consent/`, nem fotos, vídeos, embeddings (`.npy`, `.pkl`),
   bancos (`.db`, `.sqlite`) ou termos (`.pdf`, `.docx`). O `.claude/settings.json` bloqueia boa parte
   disso, mas a regra vale também para comandos de shell (`cat`, `python -c`, etc.).

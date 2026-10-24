@@ -11,6 +11,8 @@ data/*
 !data/README.md
 
 # Diretórios privados em qualquer nível
+dataset/
+datasets/
 faces/
 embeddings/
 database/

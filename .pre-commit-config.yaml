@@ -21,7 +21,7 @@ repos:
         files: |
           (?ix)(
               ^data/(?!README\.md$)
-            | (^|/)(faces|embeddings|database|checkpoints|consent|consentimento|termos|runs|mlruns|wandb)/
+            | (^|/)(datasets?|faces|embeddings|database|checkpoints|consent|consentimento|termos|runs|mlruns|wandb)/
             | \.(jpe?g|heic|heif|bmp|tiff?|webp|gif|mp4|avi|mov|mkv|webm)$
             | \.(npy|npz|pkl|pickle|joblib|h5|hdf5|faiss|index)$
             | \.(pt|pth|ckpt|onnx|safetensors|bin|tflite)$
