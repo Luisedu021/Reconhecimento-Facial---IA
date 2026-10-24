@@ -45,6 +45,15 @@ data/private/
     └── S2/          sessão de captura 2 (outro dia/local)
 ```
 
+- **Organização automática:** com as fotos numa pasta por pessoa (ex.: `dataset/<pessoa>/`), o comando abaixo
+  cria os IDs `P01`, `P02`, ..., divide as fotos em S1 (as 2 mais antigas) e S2 (as demais) e renomeia os arquivos.
+  A tabela pessoa → ID vai para um CSV **fora** do repositório e da nuvem. Rode você mesmo: a saída só mostra contagens.
+
+  ```
+  python -m facerec.organize_private --origem dataset --mapa C:\dados-privados\mapa-participantes.csv
+  ```
+
+  A divisão S1/S2 é feita pela data das fotos: confira as pastas depois e corrija à mão se algo estiver trocado.
 - Formatos aceitos: JPG ou PNG (HEIC do iPhone precisa ser convertido antes).
 - O pré-processamento grava os recortes em `data/private/cache/` (também fora do Git). Os embeddings
   das fotos privadas **não** são gravados em disco: são calculados em memória a cada avaliação.
