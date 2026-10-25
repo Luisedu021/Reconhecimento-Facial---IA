@@ -11,7 +11,8 @@ Sistema de reconhecimento facial desenvolvido em duas partes:
 
 **Integrantes:** Luís Eduardo Lopes dos Santos, Gustavo Machado Borges Daniel
 
-**Vídeos:** Parte 1 — _link_ · Parte 2 — _link_
+**Vídeos:** Parte 1 — (https://youtu.be/p4UCz_UDKNw) 
+· Parte 2 — _link_
 
 ## Pipeline
 
