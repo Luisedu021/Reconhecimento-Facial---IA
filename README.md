@@ -102,6 +102,10 @@ Modelo base em todos: InceptionResnetV1 pré-treinado no VGGFace2 ([ADR-001](doc
 Accuracy e F1 no threshold escolhido na validação (FAR = 1% em CelebA-val, [ADR-003](docs/decisions/ADR-003-recognition-threshold.md)).
 Seed 42, RTX A1000 4 GB. Dados completos em [reports/results.csv](reports/results.csv).
 
+A numeração segue o plano original ([SPEC-001](docs/specs/001-protocolo-experimental.md)): E01–E03 eram os
+experimentos principais, E05 era opcional e E06 foi um adendo registrado antes de rodar. O E04 aplica o vencedor
+da validação ao dataset privado, por isso aparece por último.
+
 | Experimento | Modelo | Estratégia / perda | Dataset | Accuracy | F1 | EER | TAR@FAR1% | Observação |
 |---|---|---|---|---|---|---|---|---|
 | [E01](experiments/E01-baseline.md) | InceptionResnetV1 (VGGFace2) | sem fine-tuning | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | baseline |
