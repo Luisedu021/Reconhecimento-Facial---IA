@@ -19,6 +19,16 @@ def test_rates_at_threshold_conta_aceites_e_rejeicoes():
     assert r["accuracy"] == 0.5
 
 
+def test_matriz_de_confusao_precision_e_recall():
+    scores = np.array([0.9, 0.8, 0.4, 0.6, 0.1, 0.2])
+    labels = np.array([1, 1, 1, 0, 0, 0])
+    r = metrics.rates_at_threshold(scores, labels, 0.5)
+    assert (r["tp"], r["fn"], r["fp"], r["tn"]) == (2, 1, 1, 2)
+    assert r["tp"] + r["fn"] + r["fp"] + r["tn"] == len(scores)
+    assert r["precision"] == pytest.approx(2 / 3)  # aceitos que eram mesmo a mesma pessoa
+    assert r["recall"] == pytest.approx(2 / 3)  # = 1 - FRR
+
+
 def test_dados_separaveis_tem_eer_zero_e_auc_um():
     scores, labels = separable()
     assert metrics.eer(scores, labels)[0] == 0.0

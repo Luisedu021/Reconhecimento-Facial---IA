@@ -22,20 +22,26 @@ def _as_arrays(scores, labels) -> tuple[np.ndarray, np.ndarray]:
 
 
 def rates_at_threshold(scores, labels, threshold: float) -> dict[str, float]:
-    """FAR, FRR, accuracy e F1 para um threshold fixo."""
+    """FAR, FRR, accuracy, precision, recall, F1 e a matriz de confusão (contagens de pares) para um threshold fixo."""
     scores, labels = _as_arrays(scores, labels)
     pred = scores >= threshold
     pos, neg = labels == 1, labels == 0
     tp = np.sum(pred & pos)
     fp = np.sum(pred & neg)
     fn = np.sum(~pred & pos)
+    tn = np.sum(~pred & neg)
     far = fp / neg.sum()  # pessoas diferentes aceitas como a mesma
     frr = fn / pos.sum()  # mesma pessoa rejeitada
     precision = tp / (tp + fp) if tp + fp else 0.0
     recall = tp / pos.sum()
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     accuracy = np.mean(pred == pos)
-    return {"far": float(far), "frr": float(frr), "accuracy": float(accuracy), "f1": float(f1)}
+    return {
+        "far": float(far), "frr": float(frr), "accuracy": float(accuracy),
+        "precision": float(precision), "recall": float(recall), "f1": float(f1),
+        # Matriz de confusão da verificação: "positivo" = par da mesma pessoa.
+        "tp": int(tp), "fp": int(fp), "fn": int(fn), "tn": int(tn),
+    }
 
 
 def roc(scores, labels) -> tuple[np.ndarray, np.ndarray, np.ndarray]:

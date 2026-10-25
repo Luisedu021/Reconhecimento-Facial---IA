@@ -13,7 +13,14 @@ FIELDS = [
     "dataset",
     # verificação (CelebA-val, LFW)
     "accuracy",
+    "precision",
+    "recall",
     "f1",
+    # matriz de confusão no threshold (contagens de pares; positivo = mesma pessoa)
+    "tp",
+    "fp",
+    "fn",
+    "tn",
     "roc_auc",
     "eer",
     "tar_at_far",
