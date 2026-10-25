@@ -1,6 +1,6 @@
 # SPEC-001 — Protocolo experimental da Parte 1
 
-- **Status:** implementada (experimentos públicos E01–E03 e E05 executados em 2026-10-25; E04 pendente)
+- **Status:** implementada (E01–E05 executados em 2026-10-25)
 - **Parte:** 1 (experimentação)
 - **Responsáveis:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
 - **Relacionados:** [ADR-001](../decisions/ADR-001-face-model.md) (modelo), [ADR-003](../decisions/ADR-003-recognition-threshold.md) (threshold), E01–E05, [requirements.md](../requirements.md)
@@ -23,8 +23,8 @@ as pessoas cadastradas e rejeita as desconhecidas (itens 6 e 32 do enunciado).
 - **RF-4:** A avaliação grava as métricas em `reports/results.csv` (uma linha por experimento e conjunto)
   e os gráficos em `reports/figures/`.
 - **RF-5:** A avaliação do dataset privado produz apenas números agregados.
-- **RF-6:** O teste de "desconhecido" no dataset privado usa rodízio: em cada rodada, 1 das 6 pessoas fica
-  fora do cadastro; são 6 rodadas.
+- **RF-6:** O teste de "desconhecido" no dataset privado usa rodízio: em cada rodada, 1 das 5 pessoas fica
+  fora do cadastro; são 5 rodadas.
 
 ### Não funcionais
 
@@ -48,7 +48,7 @@ as pessoas cadastradas e rejeita as desconhecidas (itens 6 e 32 do enunciado).
 | CelebA, subconjunto de ~1.000 identidades | treino do fine-tuning | 90% das identidades para treino |
 | CelebA, identidades restantes (~10%) | **validação**: escolha de hiperparâmetros, do melhor modelo e do threshold | pares mesma pessoa × pessoas diferentes gerados com seed fixa |
 | LFW, View 2 (10 folds de `pairs.txt`) | **teste** público, resultado final | protocolo oficial |
-| Dataset privado: 6 pessoas × 5 fotos | **teste** em condições reais | S1 (2 fotos) = cadastro; S2 (3 fotos, outro dia) = consulta |
+| Dataset privado: 5 pessoas × 5 fotos | **teste** em condições reais | S1 (2 fotos) = cadastro; S2 (3 fotos, outro dia) = consulta |
 
 Nenhuma escolha (modelo, hiperparâmetro, threshold) usa o LFW nem o dataset privado.
 

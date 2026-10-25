@@ -66,7 +66,7 @@ Os resultados vão para `reports/results.csv`, `reports/thresholds.json` e `repo
 - Confirme a licença do `facenet-pytorch` e dos pesos VGGFace2, e anote no ADR-001.
 - Commit e push de `reports/` e `docs/`. A pasta `checkpoints/` fica fora do Git automaticamente.
 
-## 5. Dataset privado (6 pessoas)
+## 5. Dataset privado (5 pessoas)
 
 1. Baixe as fotos para dentro de `C:\dev\reconhecimento-facial\dataset\`, com **uma subpasta por pessoa**
    (`pessoa1` a `pessoa6`, 5 fotos em cada). Depois apague a cópia do Drive.
@@ -76,7 +76,7 @@ Os resultados vão para `reports/results.csv`, `reports/thresholds.json` e `repo
    .venv\Scripts\python -m facerec.organize_private --origem dataset --mapa C:\dados-privados\mapa-participantes.csv
    ```
 
-3. Abra `data/private/P01` a `P06` e confira: `S1` com 2 fotos (selfie padrão + sorrindo) e `S2` com 3 (as variações).
+3. Abra `data/private/P01` a `P05` e confira: `S1` com 2 fotos (selfie padrão + sorrindo) e `S2` com 3 (as variações).
 4. Rode a avaliação (depois do passo 4):
 
    ```bash
@@ -91,7 +91,7 @@ Os resultados vão para `reports/results.csv`, `reports/thresholds.json` e `repo
   e por quê, custo computacional e limitações (item 33).
 - [README](../README.md): integrantes, tabela de resultados e link do vídeo.
 - [requirements.md](requirements.md): preencher o que falta.
-- [plano.md](plano.md): trocar "5 participantes" por 6.
+- [plano.md](plano.md): confirmado com 5 participantes (25 fotos).
 
 ## 7. Vídeo
 

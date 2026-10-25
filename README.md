@@ -89,7 +89,7 @@ Nenhum dataset é versionado neste repositório. Instruções de obtenção em [
 |---|---|---|---|---|
 | LFW — Labeled Faces in the Wild (Huang et al., UMass Amherst, Tech. Report 07-49, 2007) | http://vis-www.cs.umass.edu/lfw/ (fora do ar em out/2026; obtido do espelho do figshare usado pelo scikit-learn, `lfw.tgz` original, 180.566.744 bytes) | **teste** público final (nunca usado para escolher modelo ou threshold) | sem licença formal; publicado para pesquisa em verificação facial; o site avisa que o LFW não serve para validar algoritmos comerciais e tem pouca diversidade (poucas crianças, idosos e mulheres); exige citar o relatório técnico | 13.233 imagens, protocolo View 2 (`pairs.txt`: 6.000 pares em 10 folds) e 500 rostos como "desconhecidos" no E04; não redistribuído |
 | CelebA (Liu et al., *Deep Learning Face Attributes in the Wild*, ICCV 2015) | https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html | **treino** do fine-tuning e **validação** (escolha de modelo, época e threshold) | somente pesquisa não comercial; proibido copiar, publicar ou redistribuir qualquer parte; identidades liberadas só para pesquisa | `img_align_celeba` + `identity_CelebA.txt`; subconjunto de 1.000 identidades × 20 fotos (seed 42): 900 para treino, 100 para validação; 26 imagens sem rosto e 6 quase-duplicatas do LFW removidas; não redistribuído |
-| Dataset privado do grupo | coletado pelos integrantes, com consentimento | avaliação em condições reais | privado — não publicado (ver [docs/privacy.md](docs/privacy.md)) | 6 adultos com termo assinado, 5 selfies cada: S1 (2 fotos, cadastro) e S2 (3 fotos, outro dia, consulta); IDs pseudônimos P01–P06; resultados só agregados |
+| Dataset privado do grupo | coletado pelos integrantes, com consentimento | avaliação em condições reais | privado — não publicado (ver [docs/privacy.md](docs/privacy.md)) | 5 adultos com termo assinado, 5 selfies cada (25 fotos): S1 (2 fotos, cadastro) e S2 (3 fotos, outro dia, consulta); IDs pseudônimos P01–P05; resultados só agregados |
 
 Modelos pré-treinados são referenciados pela URL oficial; a licença dos **pesos** (e o dataset em que foram treinados)
 está registrada no ADR correspondente.
@@ -110,12 +110,17 @@ Seed 42, RTX A1000 4 GB. Dados completos em [reports/results.csv](reports/result
 | | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 4,6 min |
 | **[E05](experiments/E05-triplet-loss.md)** | parcial / Triplet semi-hard | CelebA-val | 97,13% | 0,9708 | **2,57%** | 95,27% | **vencedor pela validação** |
 | | | LFW | 99,05% (10 folds: 99,17% ± 0,38%) | 0,9905 | 0,83% | 99,30% | FAR 1,40% no LFW (acima do alvo); treino 0,9 min |
-| [E04](experiments/E04-dataset-privado.md) | E05 + protótipo / k-NN | privado (agregado) | _pendente_ | | | | |
+| [E04](experiments/E04-dataset-privado.md) | E05 + protótipo | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 64% (rodízio) e 97,0% (LFW) |
+| | E05 + k-NN (k = 1) | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 60% (rodízio) e 95,6% (LFW) |
 
 **Conclusão:** o modelo pré-treinado já é forte (99,27% no LFW). O fine-tuning com ArcFace em 900 identidades
 causou overfitting e não superou o baseline. A Triplet loss, de ajuste mais suave, teve o menor EER na validação
 e foi escolhida pelo critério definido antes dos experimentos. A vantagem é pequena (0,25 p.p.) e não se
 confirmou no LFW, o que está registrado como limitação no [ADR-001](docs/decisions/ADR-001-face-model.md).
+Nas selfies do grupo (E04), o modelo reconheceu 100% dos cadastrados e separou perfeitamente as pessoas
+(AUC = 1,0), mas o threshold escolhido em fotos de celebridades deixou passar 36–40% dos participantes fora do
+cadastro: a mudança de domínio prevista no [ADR-003](docs/decisions/ADR-003-recognition-threshold.md). O threshold
+não foi reajustado com dados de teste; a revisão, na validação, fica para a Parte 2.
 
 Resultados do dataset privado são apresentados apenas de forma agregada, sem identificar participantes.
 

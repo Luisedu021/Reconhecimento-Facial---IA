@@ -45,7 +45,7 @@ prováveis**. Os números vêm de `reports/results.csv` (execução de 2026-10-2
 |---|---|---|
 | **CelebA** | Treino e **validação** | 202 mil fotos de ~10 mil famosos. Usamos um subconjunto: **1.000 identidades × 20 fotos**. ~900 identidades treinam; ~100, **pessoas diferentes**, só validam. |
 | **LFW** | **Teste** final | 13.233 fotos de 5.749 pessoas. O `pairs.txt` define 6.000 pares (3.000 iguais, 3.000 diferentes) em 10 folds. É o benchmark padrão da área. |
-| **Privado** | Teste em condições reais | Selfies dos 6 participantes com termo assinado, em duas sessões: **S1** (cadastro, 2 fotos) e **S2** (consulta, 3 fotos com variações, outro dia). |
+| **Privado** | Teste em condições reais | Selfies dos 5 participantes com termo assinado, em duas sessões: **S1** (cadastro, 2 fotos) e **S2** (consulta, 3 fotos com variações, outro dia). |
 
 **Por que separar assim (o ponto mais importante do trabalho)**
 
@@ -63,7 +63,7 @@ prováveis**. Os números vêm de `reports/results.csv` (execução de 2026-10-2
      sessão seriam parecidas demais e inflariam o resultado.
 
 **Privacidade (LGPD):** foto de rosto é **dado biométrico, dado pessoal sensível** (art. 5º, II). Por isso:
-termo de consentimento assinado, IDs pseudônimos (P01–P06), nenhuma foto no Git nem na nuvem, embeddings só em
+termo de consentimento assinado, IDs pseudônimos (P01–P05), nenhuma foto no Git nem na nuvem, embeddings só em
 memória e resultados só agregados (médias, taxas), nunca por pessoa.
 
 **Perguntas prováveis**
@@ -277,7 +277,24 @@ EER na validação por época (a curva mais importante do vídeo):
 5. **Mas o ganho é pequeno:** 0,25 p.p., da ordem do erro amostral (≈ 0,3 p.p.), e não apareceu no LFW
    (99,17% contra 99,27%, dentro do desvio entre folds; FAR de 1,40%, acima do alvo de 1%).
 6. **Limitações:** uma seed, 5 épocas, 1.000 identidades, um backbone; LFW perto da saturação; dataset privado
-   pequeno (6 pessoas, 18 consultas: as taxas têm muita incerteza).
+   pequeno (5 pessoas, 15 consultas: as taxas têm muita incerteza).
+
+**E04: dataset privado** (o que falar)
+
+| Métrica (agregada) | Protótipo | k-NN |
+|---|---|---|
+| Rank-1 / FRR | 100% / 0% | 100% / 0% |
+| Rejeição de desconhecidos (rodízio) | 64% | 60% |
+| Rejeição de desconhecidos (LFW) | 97,0% | 95,6% |
+| AUC / EER | 1,00 / 0% | 1,00 / 0% |
+
+- **Reconhecer funcionou:** as 15 consultas (fotos de outro dia, com variações) foram para a pessoa certa.
+- **Rejeitar desconhecidos não funcionou bem:** 36–40% dos participantes fora do cadastro passaram do threshold.
+- **A causa é o threshold, não o modelo:** AUC 1,0 quer dizer que existe um valor que separa tudo; o 0,450,
+  escolhido em fotos de celebridades, fica baixo demais para selfies (mudança de domínio, ADR-003).
+- **Por que não ajustamos com essas fotos?** São teste (item 29, CA-5). A correção vai para a Parte 2: escolher de
+  novo na validação, com FAR ≤ 0,1%.
+- **Ressalva obrigatória:** 5 pessoas e 15 consultas; uma foto muda a taxa em 4 a 7 pontos.
 
 **Escolha do modelo**
 
@@ -322,3 +339,4 @@ EER na validação por época (a curva mais importante do vídeo):
 10. Por que o dataset privado é separado por sessão?
 11. Por que o fine-tuning com ArcFace piorou e o com Triplet melhorou?
 12. Por que o E05 foi escolhido mesmo tendo um resultado um pouco pior no LFW?
+13. No E04, como o AUC pode ser 1,0 se 36% dos desconhecidos foram aceitos?

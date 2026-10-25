@@ -9,7 +9,7 @@ precisam saber explicar tudo, não só a própria trilha.
 
 ## Escopo reduzido (decisões para caber no prazo)
 
-**Dataset privado:** 6 adultos com termo assinado, 5 selfies cada (30 fotos no total), enviadas pelo
+**Dataset privado:** 5 adultos com termo assinado, 5 selfies cada (25 fotos no total), enviadas pelo
 participante diretamente ao aluno responsável ([convite-participantes.md](convite-participantes.md)).
 O teste de "desconhecido" usa rodízio: cada pessoa fica uma vez fora do cadastro.
 
