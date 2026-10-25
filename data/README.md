@@ -20,7 +20,7 @@ Baixe sempre da **fonte oficial** e leia os termos de uso antes. Não redistribu
 
 | Dataset | Fonte oficial | Arquivos necessários | Onde colocar |
 |---|---|---|---|
-| LFW | http://vis-www.cs.umass.edu/lfw/ | `lfw.tgz` (todas as imagens) e `pairs.txt` (View 2) | extrair em `data/public/lfw/` → `data/public/lfw/lfw/<Nome>/<Nome>_0001.jpg`; `data/public/lfw/pairs.txt` |
+| LFW | http://vis-www.cs.umass.edu/lfw/ (fora do ar em out/2026; espelho do figshare usado pelo scikit-learn: [`lfw.tgz`](https://ndownloader.figshare.com/files/5976018), 180.566.744 bytes, e [`pairs.txt`](https://ndownloader.figshare.com/files/5976006), 155.335 bytes) | `lfw.tgz` (todas as imagens) e `pairs.txt` (View 2) | extrair em `data/public/lfw/` → `data/public/lfw/lfw/<Nome>/<Nome>_0001.jpg`; `data/public/lfw/pairs.txt` |
 | CelebA | https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html (link para o Google Drive oficial) | `Img/img_align_celeba.zip` e `Anno/identity_CelebA.txt` | extrair em `data/public/celeba/img_align_celeba/`; `data/public/celeba/identity_CelebA.txt` |
 
 Baixe pelo navegador: o download automático do CelebA costuma falhar por limite de cota do Google Drive.
