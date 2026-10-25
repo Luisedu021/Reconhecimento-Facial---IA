@@ -89,7 +89,7 @@ O único resultado esperado são PNGs em `reports/figures/` (gráficos agregados
 - [x] As licenças dos datasets públicos foram verificadas.
 - [x] O README informa a origem dos datasets públicos.
 - [x] Os resultados publicados não identificam os participantes.
-- [ ] O vídeo respeita as autorizações concedidas.
-- [ ] Os dados privados não foram enviados inadvertidamente para serviços externos.
-- [ ] Existe uma forma de excluir uma pessoa cadastrada.
-- [ ] O grupo conhece as regras de proteção de dados aplicáveis ao projeto.
+- [x] O vídeo respeita as autorizações concedidas.
+- [x] Os dados privados não foram enviados inadvertidamente para serviços externos.
+- [x] Existe uma forma de excluir uma pessoa cadastrada.
+- [x] O grupo conhece as regras de proteção de dados aplicáveis ao projeto.
