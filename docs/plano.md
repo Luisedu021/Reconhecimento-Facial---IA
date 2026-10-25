@@ -1,6 +1,6 @@
 # Plano da Parte 1 — 10 dias
 
-- **Início:** 15/10/2026 · **Entrega:** __/__
+- **Início:** 15/10/2026 · **Entrega:** 25/10/2026
 - **Trilha A — dados e avaliação:** Luís Eduardo Lopes dos Santos, com Gustavo Borges Machado
 - **Trilha B — treinamento:** Luís Eduardo Lopes dos Santos, com Gustavo Borges Machado
 
