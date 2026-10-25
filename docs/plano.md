@@ -1,8 +1,8 @@
 # Plano da Parte 1 — 10 dias
 
 - **Início:** 15/10/2026 · **Entrega:** 25/10/2026
-- **Trilha A — dados e avaliação:** Luís Eduardo Lopes dos Santos, com Gustavo Borges Machado
-- **Trilha B — treinamento:** Luís Eduardo Lopes dos Santos, com Gustavo Borges Machado
+- **Trilha A — dados e avaliação:** Luís Eduardo Lopes dos Santos, com Gustavo Machado Borges Daniel
+- **Trilha B — treinamento:** Luís Eduardo Lopes dos Santos, com Gustavo Machado Borges Daniel
 
 Na prática, o Luís executou e fez os commits das duas trilhas, e as decisões e revisões foram feitas pelos dois
 em chamadas. Os dois integrantes precisam saber explicar tudo, não só a própria trilha.

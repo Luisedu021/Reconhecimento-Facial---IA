@@ -9,7 +9,7 @@ Sistema de reconhecimento facial desenvolvido em duas partes:
 - **Parte 2 — Aplicação:** usar a melhor configuração da Parte 1 em uma aplicação com cadastro,
   reconhecimento (incluindo "pessoa desconhecida") e exclusão de pessoas.
 
-**Integrantes:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
+**Integrantes:** Luís Eduardo Lopes dos Santos, Gustavo Machado Borges Daniel
 
 **Vídeos:** Parte 1 — _link_ · Parte 2 — _link_
 

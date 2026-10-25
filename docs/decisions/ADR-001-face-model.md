@@ -2,7 +2,7 @@
 
 - **Status:** aceita
 - **Data:** 2026-10-24 (família do modelo) · 2026-10-25 (configuração final: E05, revisada para E06 no mesmo dia)
-- **Decisores:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
+- **Decisores:** Luís Eduardo Lopes dos Santos, Gustavo Machado Borges Daniel
 - **Relacionados:** [SPEC-001](../specs/001-protocolo-experimental.md), [E01](../../experiments/E01-baseline.md), [E02](../../experiments/E02-finetuning-parcial.md), [E03](../../experiments/E03-finetuning-completo.md), [E05](../../experiments/E05-triplet-loss.md), [E06](../../experiments/E06-triplet-15-epocas.md), [E04](../../experiments/E04-dataset-privado.md), [enunciado](../enunciado-parte1.md) itens 7, 19 e 29
 
 ## Contexto

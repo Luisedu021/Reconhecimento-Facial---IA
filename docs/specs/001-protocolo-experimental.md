@@ -2,7 +2,7 @@
 
 - **Status:** implementada (E01–E06 executados em 2026-10-25)
 - **Parte:** 1 (experimentação)
-- **Responsáveis:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
+- **Responsáveis:** Luís Eduardo Lopes dos Santos, Gustavo Machado Borges Daniel
 - **Relacionados:** [ADR-001](../decisions/ADR-001-face-model.md) (modelo), [ADR-003](../decisions/ADR-003-recognition-threshold.md) (threshold), E01–E05, [requirements.md](../requirements.md)
 
 ## Problema

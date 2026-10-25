@@ -2,7 +2,7 @@
 
 - **Status:** aceita em 2026-10-24 (critério decidido; o valor numérico sai da validação do modelo escolhido no ADR-001)
 - **Data:** 2026-10-24
-- **Decisores:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
+- **Decisores:** Luís Eduardo Lopes dos Santos, Gustavo Machado Borges Daniel
 - **Relacionados:** [SPEC-001](../specs/001-protocolo-experimental.md), [ADR-001](ADR-001-face-model.md), E04,
   [requirements.md](../requirements.md) RNF-01 e RNF-02, [enunciado](../enunciado-parte1.md) itens 29 e 32
 
