@@ -307,8 +307,9 @@ Sensibilidade (protótipo, só análise): FAR do rodízio 72% em 0,30 · 44% em 
   0,439, escolhido em fotos de celebridades, fica baixo demais para selfies (mudança de domínio, ADR-003). A curva
   de sensibilidade mostra o tamanho do problema: nesta amostra, só perto de 0,75 o FAR entre participantes cai.
 - **Erros concentrados:** a curva tem patamares e cai de uma vez entre 0,70 e 0,75, e o histograma mostra um
-  grupinho isolado de pares de pessoas diferentes perto de 0,70. Poucos pares de participantes parecidos (ou
-  fotografados em condições quase iguais) concentram os erros.
+  grupinho isolado de pares de pessoas diferentes perto de 0,70. Poucos pares de participantes concentram os
+  erros: o grupo inclui **parentes**, que são o caso clássico de pessoas diferentes muito parecidas para o modelo.
+  Por isso o rodízio é um cenário pessimista; os rostos do LFW, sem parentesco, são rejeitados em 95,6–97%.
 - **Por que não ajustamos para 0,75?** Porque esse valor foi observado no teste (item 29, CA-5). A correção vai
   para a Parte 2: escolher de novo na validação, com FAR ≤ 0,1%.
 - **Ressalva obrigatória:** 5 pessoas e 15 consultas; uma foto muda a taxa em 4 a 7 pontos.

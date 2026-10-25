@@ -64,7 +64,8 @@ Configuração: `threshold.criterion: far` e `threshold.far_target: 0.01` em `co
     participante (36–40% com o E05), embora as consultas S2 tenham separado perfeitamente mesma pessoa × pessoas
     diferentes (AUC = 1,0). A análise de sensibilidade mostra que, nesta amostra, o FAR entre participantes só cai
     perto de 0,75, longe do 0,439 escolhido em celebridades. Esse valor **não** foi adotado: foi observado no
-    teste (CA-5).
+    teste (CA-5). Parte desse efeito vem de o grupo incluir participantes com parentesco, caso em que pessoas
+    diferentes ficam muito parecidas; com rostos do LFW, o FAR fica abaixo de 1% a partir de 0,50.
   - **Revisão prevista para a Parte 2:** escolher de novo na validação do CelebA com um critério mais rígido
     (por exemplo FAR ≤ 0,1%) e registrar a mudança como nova versão deste ADR, citando o E04 como motivação. Se
     ainda não bastar, buscar uma validação pública mais parecida com selfies.

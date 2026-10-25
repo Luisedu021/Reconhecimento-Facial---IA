@@ -26,7 +26,8 @@ cadastradas e rejeita desconhecidos também nas selfies reais do grupo.
 ## Dados
 
 5 adultos com termo assinado, 25 fotos (10 de cadastro, 15 de consulta), IDs pseudônimos P01–P05.
-O MTCNN encontrou rosto nas 25. Nada privado sai da máquina; embeddings só em memória.
+O MTCNN encontrou rosto nas 25. Nada privado sai da máquina; embeddings só em memória. O grupo inclui
+participantes com parentesco entre si (informação agregada, sem identificar quem).
 
 | Item | Valor |
 |---|---|
@@ -85,9 +86,14 @@ Gráficos: `reports/figures/E04-privado-similaridade.png` (distribuição mesma 
   específico de participantes do mesmo grupo, fotografados nas mesmas condições.
 - **Erros concentrados:** a curva do rodízio tem um patamar (36% entre 0,50 e 0,60; 28% em 0,70) e cai de uma vez
   entre 0,70 e 0,75. No histograma, há um pequeno grupo isolado de pares de pessoas diferentes perto de 0,70, longe
-  dos demais (abaixo de 0,50). Isso indica que poucos pares de participantes concentram os erros, com rostos muito
-  parecidos entre si ou fotos em condições quase iguais (o rodízio também usa as fotos S1, de fundo branco e pose
-  frontal padronizados). Por privacidade, a análise não identifica quais pares são.
+  dos demais (abaixo de 0,50). Isso indica que poucos pares de participantes concentram os erros. O grupo inclui
+  **participantes com parentesco**, e rostos de parentes são justamente o caso em que pessoas diferentes ficam
+  muito parecidas para o modelo; somam-se as fotos em condições quase iguais (o rodízio também usa as fotos S1, de
+  fundo branco e pose frontal padronizados). Por privacidade, a análise não identifica quais pares são.
+- **Isso torna o teste de "desconhecido" mais difícil que o caso típico:** no rodízio, a pessoa fora do cadastro
+  pode ter um parente cadastrado. Os rostos do LFW, sem parentesco com ninguém do grupo, são rejeitados em
+  95,6–97%. A taxa de 44% deve ser lida como um cenário pessimista, e a limitação vale também para a Parte 2:
+  parentes muito parecidos são um caso conhecido de erro em reconhecimento facial.
 - **Protótipo × k-NN:** mesma taxa no threshold oficial (56%); ao longo da grade, o protótipo aceita um pouco
   menos de desconhecidos nos thresholds baixos. A média das 2 fotos de cadastro é mais estável que a foto mais
   parecida.
