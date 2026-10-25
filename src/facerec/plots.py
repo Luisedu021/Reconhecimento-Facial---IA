@@ -106,6 +106,27 @@ def plot_similarity(genuine: np.ndarray, impostor: np.ndarray, threshold: float,
     _save(fig, path)
 
 
+def plot_threshold_sensitivity(rows: list[dict[str, float]], official: float, title: str, path: Path) -> None:
+    """FRR e FAR (rodízio e LFW) em função do threshold, com o threshold oficial marcado (só análise, CA-9)."""
+    thr = [r["threshold"] for r in rows]
+    series = (
+        ("FRR — cadastrado rejeitado", [r["frr"] for r in rows]),
+        ("FAR — participante fora do cadastro aceito", [r["far"] for r in rows]),
+        ("FAR — rosto do LFW aceito", [1 - r["unknown_reject_rate_lfw"] for r in rows]),
+    )
+    fig, ax = plt.subplots(figsize=(6.4, 4.0))
+    for color, (label, values) in zip(SERIES, series):
+        ax.plot(thr, values, color=color, lw=1.8, marker="o", ms=4, label=label)
+    ax.axvline(official, color=INK_2, lw=1.2, ls="--", label=f"Threshold oficial (validação) = {official:.3f}".replace(".", ","))
+    ax.yaxis.set_major_formatter(PercentFormatter(1.0, decimals=0))
+    ax.set_ylim(-0.02, 1.02)
+    ax.set_xlabel("Threshold de similaridade de cosseno")
+    ax.set_ylabel("Taxa")
+    ax.set_title(title, pad=48)
+    _legend_above(ax, ncol=2)
+    _save(fig, path)
+
+
 def plot_comparison(labels: list[str], values: list[float], title: str, xlabel: str, path: Path) -> None:
     """Uma métrica entre experimentos (barras horizontais a partir do zero, valor no fim de cada barra).
 

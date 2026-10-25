@@ -13,6 +13,7 @@ Uso (rodar localmente, pelos integrantes; nunca enviar a saída por pessoa a ser
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import random
 from pathlib import Path
@@ -25,7 +26,7 @@ from . import metrics
 from .config import environment_info, load_config, resolve, set_seed
 from .evaluate import base_row, load_experiment_model
 from .model import embed_paths
-from .plots import plot_similarity
+from .plots import plot_similarity, plot_threshold_sensitivity
 from .results import append_result
 
 # Únicas chaves que podem sair deste script (CA-6). Todas numéricas e agregadas.
@@ -137,6 +138,41 @@ def evaluate_private(
     return result, genuine, impostor
 
 
+SENSITIVITY_KEYS = ("threshold", "frr", "far", "unknown_reject_rate_lfw")
+
+
+def sensitivity_grid(spec: dict) -> list[float]:
+    """Grade fixa de thresholds vinda da config, ex.: {start: 0.30, stop: 0.80, step: 0.05}."""
+    n = int(round((spec["stop"] - spec["start"]) / spec["step"])) + 1
+    return [round(spec["start"] + i * spec["step"], 4) for i in range(n)]
+
+
+def threshold_sensitivity(
+    people: dict[str, dict[str, torch.Tensor]], lfw_unknown: torch.Tensor, method: str, grid: list[float]
+) -> list[dict[str, float]]:
+    """Taxas agregadas para cada threshold de uma grade FIXA (CA-9).
+
+    É só análise do impacto do threshold (item 33): a grade vem da config, e nada aqui escolhe
+    um threshold a partir destes números (CA-5). O threshold oficial continua sendo o da validação.
+    """
+    rows = []
+    for thr in grid:
+        result, _, _ = evaluate_private(people, lfw_unknown, float(thr), method)
+        row = {k: result[k] for k in SENSITIVITY_KEYS}
+        check_aggregate_only(row)
+        rows.append(row)
+    return rows
+
+
+def write_sensitivity(path: Path, rows_by_method: dict[str, list[dict[str, float]]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["method", *SENSITIVITY_KEYS])
+        for method, rows in rows_by_method.items():
+            writer.writerows([method, *(f"{r[k]:.4f}" for k in SENSITIVITY_KEYS)] for r in rows)
+
+
 def check_aggregate_only(result: dict) -> None:
     """Garante que a saída não carrega IDs, nomes, caminhos nem embeddings (CA-6)."""
     extra = set(result) - AGGREGATE_KEYS
@@ -190,6 +226,21 @@ def main() -> None:
     plot_similarity(genuine, impostor, threshold, f"{cfg['experiment']} — similaridade no dataset privado (agregado)",
                     reports / "figures" / f"{cfg['experiment']}-privado-similaridade.png")
     print(f"{len(people)} pessoas avaliadas. Métricas agregadas gravadas em {Path('reports') / 'results.csv'}.")
+
+    if "sensitivity" in cfg:
+        grid = sensitivity_grid(cfg["sensitivity"])
+        rows = {m: threshold_sensitivity(people, lfw_unknown, m, grid) for m in cfg["methods"]}
+        write_sensitivity(reports / f"{cfg['experiment']}-sensibilidade.csv", rows)
+        plot_threshold_sensitivity(
+            rows[cfg["methods"][0]], threshold,
+            f"{cfg['experiment']} — impacto do threshold no dataset privado ({cfg['methods'][0]}, agregado)",
+            reports / "figures" / f"{cfg['experiment']}-sensibilidade-threshold.png",
+        )
+        print(f"Sensibilidade (só análise, threshold oficial = {threshold:.3f}):")
+        for m, rs in rows.items():
+            for r in rs:
+                print(f"  {m} thr {r['threshold']:.2f}: FRR {r['frr']:.1%} | FAR rodízio {r['far']:.1%} | "
+                      f"FAR LFW {1 - r['unknown_reject_rate_lfw']:.1%}")
 
 
 if __name__ == "__main__":

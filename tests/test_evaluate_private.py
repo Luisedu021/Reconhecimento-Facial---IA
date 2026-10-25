@@ -50,6 +50,31 @@ def test_threshold_nao_e_escolhido_com_dados_privados():
         assert forbidden not in source
 
 
+def test_grade_de_sensibilidade_vem_da_config():
+    assert ep.sensitivity_grid({"start": 0.3, "stop": 0.8, "step": 0.05}) == [
+        0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8
+    ]
+
+
+@pytest.mark.parametrize("method", ["prototype", "knn1"])
+def test_sensibilidade_agregada_e_monotonica(method):  # CA-9
+    # Ruído alto: pessoas sintéticas se sobrepõem, então as taxas mudam ao longo da grade.
+    people, unknown = synthetic_people(noise=0.06)
+    grid = ep.sensitivity_grid({"start": -0.2, "stop": 1.0, "step": 0.1})
+    rows = ep.threshold_sensitivity(people, unknown, method, grid)
+    assert [r["threshold"] for r in rows] == grid  # uma linha por threshold da grade, nada escolhido
+    for r in rows:
+        assert set(r) == set(ep.SENSITIVITY_KEYS)
+        assert "P01" not in repr(r)
+    frr = [r["frr"] for r in rows]
+    far = [r["far"] for r in rows]
+    far_lfw = [1 - r["unknown_reject_rate_lfw"] for r in rows]
+    assert frr == sorted(frr)  # threshold maior -> mais cadastrados rejeitados
+    assert far == sorted(far, reverse=True)  # threshold maior -> menos desconhecidos aceitos
+    assert far_lfw == sorted(far_lfw, reverse=True)
+    assert frr[0] == 0.0 and frr[-1] == 1.0
+
+
 def test_rodizio_rejeita_quem_saiu_do_cadastro():
     people, unknown = synthetic_people()
     # Threshold impossível de atingir: ninguém é aceito, todo desconhecido é rejeitado.
