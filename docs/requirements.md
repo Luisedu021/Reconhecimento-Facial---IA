@@ -35,7 +35,7 @@ desconhecido (FAR), e não pedir a um membro que tente de novo (FRR), como decid
 
 | Restrição | Valor |
 |---|---|
-| Prazo | Parte 1: __/__ · Parte 2: __/__ |
+| Prazo | Parte 1: 25/10/2026 · Parte 2:15/11/2026 |
 | Hardware | notebook com GPU NVIDIA RTX A1000 Laptop (4 GB), Windows 11; treino com AMP e batch ≤ 64 |
 | Dados | datasets públicos com licença verificada + dataset privado com consentimento |
 | Privacidade | LGPD; dados privados processados só localmente ([privacy.md](privacy.md)) |
