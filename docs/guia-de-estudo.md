@@ -1,15 +1,16 @@
-# Roteiro de explicação da Parte 1
+# Guia de estudo da Parte 1
 
-Material de estudo para os dois integrantes e base do vídeo (item 35). A ordem segue os tópicos exigidos:
+Material de estudo dos integrantes: todos precisam saber explicar arquitetura, modelos, perdas, treinamento,
+métricas, código, decisões e resultados (enunciado, linhas 136–145). A ordem segue os tópicos do item 35:
 problema → datasets → arquitetura → hipóteses → experimentos → treinamento → resultados → comparação →
-conclusão → escolha do modelo. Cada seção traz **o que dizer**, **onde está no código** e **perguntas
-prováveis**. Os números vêm de `reports/results.csv` (execução de 2026-10-25); os do E04 entram depois.
+conclusão → escolha do modelo. Cada seção traz **os conceitos**, **onde estão no código** e **perguntas para
+revisar**. Os números vêm de `reports/results.csv` (execução de 2026-10-25).
 
 ---
 
 ## 1. O problema
 
-**O que dizer**
+**Conceitos**
 
 - Reconhecimento facial tem duas tarefas:
   - **Verificação (1:1):** "estas duas fotos são da mesma pessoa?". Exemplo: desbloquear o celular.
@@ -29,7 +30,7 @@ prováveis**. Os números vêm de `reports/results.csv` (execução de 2026-10-2
 - Decisão: se `similaridade ≥ threshold`, é a mesma pessoa.
 - Cadastrar alguém novo = guardar o embedding dessa pessoa. **Nada de retreinar.**
 
-**Perguntas prováveis**
+**Perguntas para revisar**
 
 - *Por que cosseno e não distância euclidiana?* Os embeddings são normalizados (comprimento 1). Nesse caso as duas
   medidas são equivalentes (‖a−b‖² = 2 − 2·cos), e o cosseno é mais fácil de interpretar como "ângulo".
@@ -39,7 +40,7 @@ prováveis**. Os números vêm de `reports/results.csv` (execução de 2026-10-2
 
 ## 2. Os datasets
 
-**O que dizer:** cada conjunto tem um papel, e nenhum deles é usado para duas coisas.
+**Ideia central:** cada conjunto tem um papel, e nenhum deles é usado para duas coisas.
 
 | Dataset | Papel | Detalhes |
 |---|---|---|
@@ -66,7 +67,7 @@ prováveis**. Os números vêm de `reports/results.csv` (execução de 2026-10-2
 termo de consentimento assinado, IDs pseudônimos (P01–P05), nenhuma foto no Git nem na nuvem, embeddings só em
 memória e resultados só agregados (médias, taxas), nunca por pessoa.
 
-**Perguntas prováveis**
+**Perguntas para revisar**
 
 - *Por que não treinar no LFW?* Porque ele é o teste. E ele é pequeno: muitas pessoas têm só 1 foto.
 - *Por que só 1.000 identidades do CelebA?* Custo: a GPU tem 4 GB e o tempo é limitado. 20 fotos por pessoa dão
@@ -107,7 +108,7 @@ foto → [MTCNN: detecta e recorta] → rosto 160×160 → [InceptionResnetV1] �
   `conv iniciais → blocos Inception-ResNet (repeat_1, 2, 3) → block8 → avgpool → dropout → last_linear (→512) → last_bn`.
 - A camada de classificação original (8.631 pessoas do VGGFace2) **não é usada**. A saída é o embedding.
 
-**Perguntas prováveis**
+**Perguntas para revisar**
 
 - *Por que um modelo pré-treinado?* Treinar do zero exigiria milhões de fotos e dias de GPU. Partir do VGGFace2 e
   ajustar é o padrão quando há pouco dado e pouco hardware.
@@ -193,7 +194,7 @@ Tudo o que muda entre os experimentos está nos YAML (`configs/e01.yaml` … `e0
   Isso é *early stopping* por checkpoint: se a época 5 for pior que a 3, ficamos com a 3.
 - 5 épocas, batch 64.
 
-**Perguntas prováveis**
+**Perguntas para revisar**
 
 - *O que é uma época?* Uma passada por todas as imagens de treino.
 - *O que é overfitting?* O modelo decora o treino e piora em dados novos. Detectamos quando a perda de treino
@@ -255,7 +256,7 @@ Todas partem de pares com uma **similaridade** e um rótulo (mesma pessoa ou nã
 
 \* Melhor época = aquecimento (backbone intacto), por isso igual ao E01.
 
-EER na validação por época (a curva mais importante do vídeo):
+EER na validação por época (a curva mais importante para entender os resultados):
 
 | Época | 1 | 2 | 3 | 4 | 5 |
 |---|---|---|---|---|---|
@@ -263,7 +264,7 @@ EER na validação por época (a curva mais importante do vídeo):
 | E03 (ArcFace, completo) | 2,82% (aquec.) | 3,12% | 3,12% | 3,12% | 3,37% |
 | E05 (Triplet, parcial) | 2,93% | 2,83% | 2,65% | 2,72% | **2,57%** |
 
-**Interpretação** (o que falar):
+**Interpretação:**
 
 1. **Baseline forte:** sem treinar nada, 99,27% no LFW. Pesos treinados em 3,3 milhões de fotos já resolvem
    quase tudo.
@@ -279,7 +280,7 @@ EER na validação por época (a curva mais importante do vídeo):
 6. **Limitações:** uma seed, 5 épocas, 1.000 identidades, um backbone; LFW perto da saturação; dataset privado
    pequeno (5 pessoas, 15 consultas: as taxas têm muita incerteza).
 
-**E04: dataset privado** (o que falar)
+**E04: dataset privado**
 
 | Métrica (agregada) | Protótipo | k-NN |
 |---|---|---|
@@ -303,7 +304,7 @@ EER na validação por época (a curva mais importante do vídeo):
 - **Por que não escolher o E01, já que ele foi um pouco melhor no LFW?** Porque isso seria usar o teste para
   escolher o modelo (item 29). O critério foi definido **antes** dos experimentos, e trocá-lo depois de ver o
   resultado do teste seria data leakage. O resultado do LFW é reportado como limitação, não usado na escolha.
-- Frase-chave para o vídeo: *"escolhemos pela validação, não pelo teste; o LFW só confirma — e, neste caso,
+- Resumo em uma frase: *"escolhemos pela validação, não pelo teste; o LFW só confirma — e, neste caso,
   ele mostrou que a vantagem é pequena"*.
 
 ---
