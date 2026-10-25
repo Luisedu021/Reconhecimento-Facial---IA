@@ -168,7 +168,7 @@ def main() -> None:
     cfg = load_config(args.config)
     set_seed(cfg["seed"])
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    source = load_config(cfg["source_config"])  # experimento vencedor de E01-E03
+    source = load_config(cfg["source_config"])  # experimento vencedor na validação (ADR-001)
     reports = resolve(cfg["paths"]["reports"])
 
     threshold = args.threshold

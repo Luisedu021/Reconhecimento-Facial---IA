@@ -1,0 +1,26 @@
+{
+  "E01": {
+    "threshold": 0.3996613323688507,
+    "criterion": "far",
+    "far_target": 0.01,
+    "chosen_on": "celeba-val"
+  },
+  "E02": {
+    "threshold": 0.3996613323688507,
+    "criterion": "far",
+    "far_target": 0.01,
+    "chosen_on": "celeba-val"
+  },
+  "E03": {
+    "threshold": 0.3996613323688507,
+    "criterion": "far",
+    "far_target": 0.01,
+    "chosen_on": "celeba-val"
+  },
+  "E05": {
+    "threshold": 0.44958120584487915,
+    "criterion": "far",
+    "far_target": 0.01,
+    "chosen_on": "celeba-val"
+  }
+}

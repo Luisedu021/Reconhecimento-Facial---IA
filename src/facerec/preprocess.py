@@ -69,7 +69,12 @@ def run_batched(detector, sources: list[Path], outputs: list[Path], batch_size: 
     for start in tqdm(range(0, len(sources), batch_size), desc="faces"):
         src, dst = sources[start : start + batch_size], outputs[start : start + batch_size]
         imgs = [Image.open(s).convert("RGB") for s in src]
-        faces = detector(imgs)
+        try:
+            faces = detector(imgs)
+        except ValueError:
+            # Bug do facenet-pytorch 2.6 com NumPy >= 1.24: o lote quebra quando alguma imagem
+            # não tem rosto (np.array de None misturado com caixas). Refaz esse lote uma a uma.
+            faces = [detector(img) for img in imgs]
         for img, face, out in zip(imgs, faces, dst):
             if face is None and fallback_size:
                 face, ok = center_crop(img, fallback_size), "fallback"

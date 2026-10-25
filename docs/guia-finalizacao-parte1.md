@@ -33,7 +33,7 @@ Baixe pelo navegador, das fontes oficiais:
 
 | Dataset | Arquivos | Onde colocar |
 |---|---|---|
-| [LFW](http://vis-www.cs.umass.edu/lfw/) | `lfw.tgz` e `pairs.txt` | extrair em `data/public/lfw/` (fica `data/public/lfw/lfw/<Nome>/...`) e `data/public/lfw/pairs.txt` |
+| [LFW](http://vis-www.cs.umass.edu/lfw/) (fora do ar; usar o espelho: [`lfw.tgz`](https://ndownloader.figshare.com/files/5976018) e [`pairs.txt`](https://ndownloader.figshare.com/files/5976006)) | `lfw.tgz` e `pairs.txt` | extrair em `data/public/lfw/` (fica `data/public/lfw/lfw/<Nome>/...`) e `data/public/lfw/pairs.txt` |
 | [CelebA](https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) | `img_align_celeba.zip` e `identity_CelebA.txt` | extrair em `data/public/celeba/img_align_celeba/` e `data/public/celeba/identity_CelebA.txt` |
 
 Leia os termos de uso dos dois e preencha a tabela de datasets do [README](../README.md) (item 10).
@@ -48,6 +48,12 @@ Nesta ordem, cerca de 1 a 2 horas no total:
 
 ```bash
 .venv\Scripts\python -m facerec.evaluate --config configs/e01.yaml; .venv\Scripts\python -m facerec.train --config configs/e02.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e02.yaml; .venv\Scripts\python -m facerec.train --config configs/e03.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e03.yaml
+```
+
+E05 (opcional na SPEC-001, executado; foi o vencedor):
+
+```bash
+.venv\Scripts\python -m facerec.train --config configs/e05.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e05.yaml
 ```
 
 Os resultados vão para `reports/results.csv`, `reports/thresholds.json` e `reports/figures/`.

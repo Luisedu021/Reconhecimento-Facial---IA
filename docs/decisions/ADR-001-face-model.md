@@ -1,9 +1,9 @@
 # ADR-001 — Modelo de reconhecimento facial
 
-- **Status:** proposta (família do modelo decidida; configuração final depende de E01–E03)
-- **Data:** 2026-10-24
+- **Status:** aceita
+- **Data:** 2026-10-24 (família do modelo) · 2026-10-25 (configuração final, depois de E01–E05)
 - **Decisores:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
-- **Relacionados:** [SPEC-001](../specs/001-protocolo-experimental.md), E01, E02, E03, [enunciado](../enunciado-parte1.md) itens 7 e 19
+- **Relacionados:** [SPEC-001](../specs/001-protocolo-experimental.md), [E01](../../experiments/E01-baseline.md), [E02](../../experiments/E02-finetuning-parcial.md), [E03](../../experiments/E03-finetuning-completo.md), [E05](../../experiments/E05-triplet-loss.md), [enunciado](../enunciado-parte1.md) itens 7, 19 e 29
 
 ## Contexto
 
@@ -26,8 +26,17 @@ O item 7 do enunciado pede uma escolha de modelo tecnicamente justificada. As re
 ## Decisão
 
 Usar a **alternativa A** como família de modelo em todos os experimentos. A configuração final é a de **menor EER
-na validação (CelebA-val)** entre E01, E02 e E03: _a preencher depois dos experimentos_. O LFW e o dataset privado
-não participam da escolha (item 29).
+na validação (CelebA-val)** entre os experimentos públicos. O LFW e o dataset privado não participam da escolha
+(item 29).
+
+**Configuração escolhida: E05**, fine-tuning parcial (`block8`, `last_linear`, `last_bn`) com Triplet loss e
+mineração semi-hard, checkpoint da época 5, **threshold 0,450** (FAR = 1% em CelebA-val, [ADR-003](ADR-003-recognition-threshold.md)).
+É a configuração usada no E04 (`configs/e04.yaml`) e na Parte 2.
+
+- O E05 estava previsto na SPEC-001 como opcional e foi avaliado com o mesmo protocolo e o mesmo critério dos
+  demais, por isso concorre em igualdade com E01–E03.
+- E02 e E03 (ArcFace) pioraram a validação a cada época de treino; o checkpoint escolhido de ambos foi o da
+  época de aquecimento, idêntico ao E01.
 
 ## Evidências
 
@@ -35,14 +44,37 @@ não participam da escolha (item 29).
 |---|---|
 | Memória de treino medida (dados aleatórios, AMP) | fine-tuning parcial com batch 64: 0,33 GB; completo com batch 32: 0,96 GB |
 | Tempo por passo de treino | ~0,28 s (parcial, batch 64); ~0,23 s (completo, batch 32) |
-| Testes do pipeline | 27 testes com dados sintéticos passando |
-| EER em CelebA-val: E01 / E02 / E03 | _a preencher_ |
-| Acurácia no LFW (10 folds): E01 / E02 / E03 | _a preencher_ |
+| Testes do pipeline | 33 testes com dados sintéticos passando |
+| EER em CelebA-val: E01 / E02 / E03 / **E05** | 2,82% / 2,82% / 2,82% / **2,57%** |
+| TAR @ FAR = 1% em CelebA-val: E01 / E02 / E03 / E05 | 95,17% / 95,17% / 95,17% / 95,27% |
+| Acurácia no LFW (10 folds): E01 / E02 / E03 / E05 | 99,27% / 99,27% / 99,27% / 99,17% (± 0,32–0,38%) |
+| FAR / FRR no LFW com o threshold da validação: E01 / E05 | 0,67% / 0,67% · 1,40% / 0,50% |
+| Tempo de treino: E02 / E03 / E05 | 3,5 min / 4,6 min / 0,9 min |
+
+Fonte: `reports/results.csv` e `reports/E0x-historico.csv`, gerados em 2026-10-25 (seed 42, RTX A1000).
+
+**Ressalvas registradas junto com a decisão:**
+
+- A vantagem do E05 na validação é pequena (0,25 p.p. de EER), da ordem do erro amostral com 3.000 pares de
+  cada tipo (≈ 0,3 p.p.). Seguimos o critério definido antes dos experimentos, sem trocá-lo depois de ver o
+  resultado.
+- No teste, o E05 não confirmou o ganho: acurácia no LFW 0,1 p.p. abaixo do E01 (dentro do desvio entre folds)
+  e FAR de 1,40% com o threshold da validação, acima do alvo de 1% (RNF-01). Pelo item 29, esse resultado de
+  teste é reportado, mas não muda a escolha. O E04 vai medir se o threshold 0,450 funciona nas selfies reais.
 
 ## Licenças
 
-- **Código:** `facenet-pytorch` ([repositório oficial](https://github.com/timesler/facenet-pytorch)) — _confirmar a licença no LICENSE do repositório._
-- **Pesos `vggface2`:** baixados pela própria biblioteca e não versionados. Foram treinados no dataset VGGFace2: _confirmar os termos de uso do VGGFace2 (finalidade acadêmica e não comercial) e registrar aqui._
+- **Código:** `facenet-pytorch` ([repositório oficial](https://github.com/timesler/facenet-pytorch)): **licença MIT**
+  (Copyright (c) 2019 Timothy Esler), conforme o `LICENSE.md` do repositório, consultado em 2026-10-25.
+  Permite uso, modificação e redistribuição mantendo o aviso de copyright.
+- **Pesos `vggface2`:** baixados pela própria biblioteca e não versionados. Foram treinados no dataset VGGFace2
+  (Cao et al., *VGGFace2: A dataset for recognising faces across pose and age*, FG 2018). A página oficial do
+  dataset ([VGG, Oxford](https://www.robots.ox.ac.uk/~vgg/data/vgg_face2/)) informa que ele **não está mais
+  disponível para download** e não traz texto de licença. Por prudência, tratamos os pesos como de **uso
+  acadêmico e não comercial**, que é o caso deste trabalho, e não os redistribuímos.
+- **CelebA** (fine-tuning do E05): somente pesquisa não comercial, sem redistribuição (termos na
+  [página oficial](https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html)). O checkpoint do E05 deriva do CelebA e
+  por isso também não é versionado.
 
 ## Consequências
 
@@ -52,4 +84,8 @@ não participam da escolha (item 29).
 - **Negativas e riscos:**
   - O modelo base é mais antigo que o estado da arte.
   - O LFW está perto da saturação, então as diferenças entre experimentos podem ser pequenas. Por isso também se reportam o EER e a TAR @ FAR = 1%.
+  - A Parte 2 depende de um checkpoint local (`checkpoints/E05.pt`), que precisa ser regerado com
+    `python -m facerec.train --config configs/e05.yaml` em cada máquina (menos de 1 minuto na RTX A1000).
+  - O FAR de 1,40% do E05 no LFW indica que o threshold pode precisar de revisão na Parte 2; qualquer revisão
+    será feita na validação e registrada no ADR-003.
 - **Privacidade:** o fine-tuning usa só o CelebA, que é público. Nenhum checkpoint deriva das fotos dos participantes, o que atende ao item 19 por construção. Os checkpoints não são versionados mesmo assim (tamanho e licença dos pesos de origem).

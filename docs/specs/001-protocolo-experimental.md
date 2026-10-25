@@ -1,6 +1,6 @@
 # SPEC-001 — Protocolo experimental da Parte 1
 
-- **Status:** rascunho
+- **Status:** implementada (experimentos públicos E01–E03 e E05 executados em 2026-10-25; E04 pendente)
 - **Parte:** 1 (experimentação)
 - **Responsáveis:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
 - **Relacionados:** [ADR-001](../decisions/ADR-001-face-model.md) (modelo), [ADR-003](../decisions/ADR-003-recognition-threshold.md) (threshold), E01–E05, [requirements.md](../requirements.md)
@@ -23,8 +23,8 @@ as pessoas cadastradas e rejeita as desconhecidas (itens 6 e 32 do enunciado).
 - **RF-4:** A avaliação grava as métricas em `reports/results.csv` (uma linha por experimento e conjunto)
   e os gráficos em `reports/figures/`.
 - **RF-5:** A avaliação do dataset privado produz apenas números agregados.
-- **RF-6:** O teste de "desconhecido" no dataset privado usa rodízio: em cada rodada, 1 das 5 pessoas fica
-  fora do cadastro; são 5 rodadas.
+- **RF-6:** O teste de "desconhecido" no dataset privado usa rodízio: em cada rodada, 1 das 6 pessoas fica
+  fora do cadastro; são 6 rodadas.
 
 ### Não funcionais
 
@@ -48,7 +48,7 @@ as pessoas cadastradas e rejeita as desconhecidas (itens 6 e 32 do enunciado).
 | CelebA, subconjunto de ~1.000 identidades | treino do fine-tuning | 90% das identidades para treino |
 | CelebA, identidades restantes (~10%) | **validação**: escolha de hiperparâmetros, do melhor modelo e do threshold | pares mesma pessoa × pessoas diferentes gerados com seed fixa |
 | LFW, View 2 (10 folds de `pairs.txt`) | **teste** público, resultado final | protocolo oficial |
-| Dataset privado: 5 pessoas × 5 fotos | **teste** em condições reais | S1 (2 fotos) = cadastro; S2 (3 fotos, outro dia) = consulta |
+| Dataset privado: 6 pessoas × 5 fotos | **teste** em condições reais | S1 (2 fotos) = cadastro; S2 (3 fotos, outro dia) = consulta |
 
 Nenhuma escolha (modelo, hiperparâmetro, threshold) usa o LFW nem o dataset privado.
 
@@ -59,8 +59,11 @@ Nenhuma escolha (modelo, hiperparâmetro, threshold) usa o LFW nem o dataset pri
 | E01 | InceptionResnetV1 pré-treinado (VGGFace2), sem fine-tuning (baseline) | CelebA-val | LFW |
 | E02 | Fine-tuning parcial: só o último bloco e a camada de embedding treinam; ArcFace loss | CelebA-val | LFW |
 | E03 | Fine-tuning completo: toda a rede treina, learning rate menor no backbone; ArcFace loss | CelebA-val | LFW |
-| E04 | Melhor modelo de E01–E03: protótipo (média do cadastro) + cosseno × k-NN (k = 1); threshold de CelebA-val | — | privado (agregado) |
-| E05 | _Opcional:_ E02 com Triplet loss (mineração semi-hard) | CelebA-val | LFW |
+| E04 | Melhor modelo de E01–E03 e E05 pela validação: protótipo (média do cadastro) + cosseno × k-NN (k = 1); threshold de CelebA-val | — | privado (agregado) |
+| E05 | _Opcional (executado):_ E02 com Triplet loss (mineração semi-hard) | CelebA-val | LFW |
+
+O E05 usa o mesmo protocolo e o mesmo critério de escolha, por isso concorre com E01–E03. Resultado: o E05
+teve o menor EER em CelebA-val e é o modelo do E04 ([ADR-001](../decisions/ADR-001-face-model.md)).
 
 Hiperparâmetros iniciais: AdamW, learning rate 1e-3 na cabeça ArcFace (pesos novos), 1e-4 nas camadas finais
 e 1e-5 no restante do backbone (E03); batch 64 em todos (medido: 0,33 GB no E02 e ~1 GB no E03); 5 épocas, sendo a primeira
@@ -101,13 +104,16 @@ variação de cor). A melhor época é a de menor EER na validação. Valores fi
 
 | Critério | Teste | Status |
 |---|---|---|
-| CA-1, CA-2 | `tests/test_data.py::test_split_sem_sobreposicao` | pendente |
-| CA-3 | `tests/test_data.py::test_sem_augmentation_fora_do_treino` | pendente |
-| CA-4 | `tests/test_data.py::test_remove_sobreposicao_celeba_lfw` | pendente |
-| CA-5, CA-6 | `tests/test_evaluate_private.py::test_saida_agregada` | pendente |
-| CA-7, CA-8 | `tests/test_reproducibility.py` | pendente |
+| CA-1, CA-2 | `tests/test_data.py::test_split_sem_sobreposicao` | passando |
+| CA-3 | `tests/test_data.py::test_sem_augmentation_fora_do_treino` | passando |
+| CA-4 | `tests/test_data.py::test_remove_sobreposicao_celeba_lfw` | passando (execução real: 6 de 19.974 imagens removidas) |
+| CA-5, CA-6 | `tests/test_evaluate_private.py::test_saida_agregada` | passando |
+| CA-7, CA-8 | `tests/test_reproducibility.py` | passando |
+| RF-2 (lote com imagem sem rosto) | `tests/test_preprocess.py::test_lote_com_imagem_sem_rosto_nao_quebra` | passando |
+
+Execução de 2026-10-25: 33 testes passando (`pytest`).
 
 ## Em aberto
 
 - [x] FAR-alvo para escolher o threshold: FAR ≤ 1% na validação, decidido no [ADR-003](../decisions/ADR-003-recognition-threshold.md).
-- [ ] Confirmar licença do código e dos pesos VGGFace2 do `facenet-pytorch` → registrar no [ADR-001](../decisions/ADR-001-face-model.md).
+- [x] Licença do código (MIT) e dos pesos VGGFace2 do `facenet-pytorch` registradas no [ADR-001](../decisions/ADR-001-face-model.md).

@@ -1,7 +1,7 @@
 # Requisitos do sistema
 
 - **Status:** rascunho
-- **Última revisão:** __/__
+- **Última revisão:** 25/10/2026 (requisitos medidos na Parte 1; os da aplicação são fechados na Parte 2)
 
 > Como preencher: escreva cada requisito como "O sistema deve…". Requisito não funcional sempre com
 > **número e forma de medir** ("rápido" não é requisito; "≤ 500 ms por imagem na CPU do notebook" é).
@@ -26,7 +26,7 @@ um laboratório, registro de presença. Duas ou três frases._
 | Restrição | Valor |
 |---|---|
 | Prazo | Parte 1: __/__ · Parte 2: __/__ |
-| Hardware | _ex.: notebook com RTX A1000 4 GB_ |
+| Hardware | notebook com GPU NVIDIA RTX A1000 Laptop (4 GB), Windows 11; treino com AMP e batch ≤ 64 |
 | Dados | datasets públicos com licença verificada + dataset privado com consentimento |
 | Privacidade | LGPD; dados privados processados só localmente ([privacy.md](privacy.md)) |
 
@@ -52,10 +52,10 @@ Prioridade: **obrigatório** (exigido pelo enunciado) · **desejável** · **opc
 | RNF-01 | Qualidade do reconhecimento | O sistema deve aceitar no máximo 1% das pessoas não cadastradas (FAR ≤ 1%), com o threshold fixado na validação | FAR nos pares de validação do CelebA, onde o threshold é escolhido; depois reportada no LFW e no dataset privado (agregado) | grupo ([ADR-003](decisions/ADR-003-recognition-threshold.md)) |
 | RNF-02 | Qualidade do reconhecimento | _FRR máxima aceitável: …_ | | grupo |
 | RNF-03 | Desempenho | _Tempo por imagem ou FPS na câmera: …_ | | grupo |
-| RNF-04 | Privacidade | _Dados privados processados só localmente: …_ | | item 23 |
-| RNF-05 | Privacidade | _Nenhum dado privado no repositório: …_ | | itens 18–20 |
-| RNF-06 | Reprodutibilidade | _Seed, versões e hiperparâmetros registrados: …_ | | item 34 |
-| RNF-07 | Manutenibilidade | _Configuração externa, testes automatizados: …_ | | item 41 |
+| RNF-04 | Privacidade | O sistema deve processar fotos e embeddings privados só na máquina local, sem enviá-los a serviços externos; embeddings privados ficam só em memória na avaliação | revisão de código + `tests/test_evaluate_private.py` (saída só agregada, recusa de dado individual) | item 23 |
+| RNF-05 | Privacidade | O repositório não deve conter fotos, embeddings, bancos, checkpoints derivados de dados privados nem termos | `.gitignore` + hooks do `.pre-commit-config.yaml` bloqueando o commit; checklist do Anexo B em [privacy.md](privacy.md) | itens 18–20 |
+| RNF-06 | Reprodutibilidade | Cada experimento deve registrar seed, versões das bibliotecas, hiperparâmetros e hardware, e repetir as métricas com tolerância de 0,5 p.p. | colunas de `reports/results.csv`; `tests/test_reproducibility.py` (CA-7, CA-8) | item 34 |
+| RNF-07 | Manutenibilidade | Nenhum caminho ou hiperparâmetro fixo no código: tudo em `configs/*.yaml`; testes automatizados com dados sintéticos | `pytest`: 33 testes passando em 2026-10-25 | item 41 |
 | RNF-08 | Usabilidade | _…_ | | grupo |
 
 ## 6. Perguntas em aberto

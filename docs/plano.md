@@ -9,7 +9,7 @@ precisam saber explicar tudo, não só a própria trilha.
 
 ## Escopo reduzido (decisões para caber no prazo)
 
-**Dataset privado:** 5 adultos com termo assinado, 5 selfies cada (25 fotos no total), enviadas pelo
+**Dataset privado:** 6 adultos com termo assinado, 5 selfies cada (30 fotos no total), enviadas pelo
 participante diretamente ao aluno responsável ([convite-participantes.md](convite-participantes.md)).
 O teste de "desconhecido" usa rodízio: cada pessoa fica uma vez fora do cadastro.
 
@@ -21,7 +21,7 @@ O teste de "desconhecido" usa rodízio: cada pessoa fica uma vez fora do cadastr
 Modelo, hiperparâmetros e threshold são escolhidos na **validação do CelebA** (identidades fora do treino).
 LFW e dataset privado são só **teste** (item 29). Detalhes em [SPEC-001](specs/001-protocolo-experimental.md).
 
-**Experimentos** (proposta — modelo final decidido no ADR-001):
+**Experimentos** (modelo final decidido no ADR-001: **E05**, menor EER na validação):
 
 | ID | Configuração | Teste |
 |---|---|---|
@@ -29,7 +29,7 @@ LFW e dataset privado são só **teste** (item 29). Detalhes em [SPEC-001](specs
 | E02 | Fine-tuning parcial + ArcFace loss, subconjunto do CelebA | LFW |
 | E03 | Fine-tuning completo, mesma configuração do E02 | LFW |
 | E04 | Melhor modelo: protótipo/cosseno × k-NN, threshold da validação, "desconhecido" | dataset privado (agregado) |
-| E05 | _Opcional:_ E02 com Triplet loss no lugar da ArcFace | LFW |
+| E05 | _Opcional (executado):_ E02 com Triplet loss no lugar da ArcFace | LFW |
 
 ## Cronograma
 

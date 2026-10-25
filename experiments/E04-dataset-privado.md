@@ -3,11 +3,11 @@
 - **Data:** _AAAA-MM-DD_
 - **Responsável:** _nome_
 - **Config:** [`configs/e04.yaml`](../configs/e04.yaml)
-- **Modelo avaliado:** _vencedor de E01–E03 pela validação (ADR-001)_
+- **Modelo avaliado:** E05 (fine-tuning parcial com Triplet loss), vencedor pela validação ([ADR-001](../docs/decisions/ADR-001-face-model.md)); threshold 0,450
 
 ## Hipótese
 
-O melhor modelo de E01–E03, com o threshold escolhido na validação do CelebA, reconhece as pessoas
+O melhor modelo de E01–E03 e E05, com o threshold escolhido na validação do CelebA, reconhece as pessoas
 cadastradas e rejeita desconhecidos também nas selfies reais do grupo.
 
 ## Configuração
@@ -22,7 +22,8 @@ cadastradas e rejeita desconhecidos também nas selfies reais do grupo.
 
 ## Dados
 
-5 adultos com termo assinado, 25 fotos. Nada privado sai da máquina; embeddings só em memória.
+6 adultos com termo assinado, 30 fotos (12 de cadastro, 18 de consulta). Nada privado sai da máquina;
+embeddings só em memória.
 
 ## Resultados (agregados)
 
@@ -39,4 +40,4 @@ Gráfico: `reports/figures/E04-privado-similaridade.png`.
 
 ## Interpretação
 
-_A preencher. Limitação: amostra pequena (15 consultas); os números indicam tendência, não precisão estatística._
+_A preencher. Limitação: amostra pequena (18 consultas); os números indicam tendência, não precisão estatística._
