@@ -55,6 +55,19 @@ git log --all --name-only --pretty=format: | Sort-Object -Unique | Select-String
 
 O único resultado esperado são PNGs em `reports/figures/` (gráficos agregados).
 
+**Última verificação: 2026-10-25** (histórico completo, todos os ramos, até o commit `30e2637`):
+
+- O comando acima listou só `data/README.md` e os 9 PNGs de `reports/figures/`. O PNG do E04 foi aberto e
+  contém apenas histogramas agregados (15 pares mesma pessoa, 60 pares pessoas diferentes), sem IDs nem imagens.
+- Nenhum arquivo em `dataset/`, `data/private/`, `faces/`, `embeddings/`, `database/`, `checkpoints/` ou `consent/`
+  em nenhum commit; nenhum arquivo acima de 500 KB.
+- Busca no conteúdo de todos os commits por IDs com resultado individual ou caminhos de fotos privadas: só
+  referências genéricas em instruções e configs.
+- As linhas do E04 em `reports/results.csv` têm só as chaves agregadas do CA-6.
+- `git check-ignore` confirma que `data/private/`, `dataset/`, `checkpoints/`, `data/public/` e `consent/` estão
+  ignorados; o hook do pre-commit está instalado. O `.pre-commit-config.yaml` só foi alterado para ampliar o
+  bloqueio (`dataset/` e `datasets/`, commit `afe3d79`); nenhuma regra foi removida do `.gitignore`.
+
 ## Se algo privado vazar
 
 1. Tornar o repositório privado imediatamente.
@@ -64,18 +77,18 @@ O único resultado esperado são PNGs em `reports/figures/` (gráficos agregados
 
 ## Checklist de entrega (Anexo B do enunciado)
 
-- [ ] Todas as pessoas participantes deram consentimento.
-- [ ] Os termos de consentimento estão armazenados de forma privada.
-- [ ] Nenhum termo de consentimento está no GitHub.
-- [ ] Nenhuma fotografia privada está no GitHub.
-- [ ] Nenhum embedding privado está no GitHub.
-- [ ] Nenhum banco biométrico está no GitHub.
-- [ ] Nenhum checkpoint derivado dos dados privados está no GitHub.
-- [ ] O `.gitignore` protege os diretórios privados.
-- [ ] O histórico do Git foi verificado.
-- [ ] As licenças dos datasets públicos foram verificadas.
-- [ ] O README informa a origem dos datasets públicos.
-- [ ] Os resultados publicados não identificam os participantes.
+- [x] Todas as pessoas participantes deram consentimento.
+- [x] Os termos de consentimento estão armazenados de forma privada.
+- [x] Nenhum termo de consentimento está no GitHub.
+- [x] Nenhuma fotografia privada está no GitHub.
+- [x] Nenhum embedding privado está no GitHub.
+- [x] Nenhum banco biométrico está no GitHub.
+- [x] Nenhum checkpoint derivado dos dados privados está no GitHub.
+- [x] O `.gitignore` protege os diretórios privados.
+- [x] O histórico do Git foi verificado.
+- [x] As licenças dos datasets públicos foram verificadas.
+- [x] O README informa a origem dos datasets públicos.
+- [x] Os resultados publicados não identificam os participantes.
 - [ ] O vídeo respeita as autorizações concedidas.
 - [ ] Os dados privados não foram enviados inadvertidamente para serviços externos.
 - [ ] Existe uma forma de excluir uma pessoa cadastrada.
