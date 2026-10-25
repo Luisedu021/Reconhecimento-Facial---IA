@@ -100,18 +100,18 @@ Modelo base em todos: InceptionResnetV1 pré-treinado no VGGFace2 ([ADR-001](doc
 Accuracy e F1 no threshold escolhido na validação (FAR = 1% em CelebA-val, [ADR-003](docs/decisions/ADR-003-recognition-threshold.md)).
 Seed 42, RTX A1000 4 GB. Dados completos em [reports/results.csv](reports/results.csv).
 
-| Experimento | Estratégia / perda | Dataset | Accuracy | F1 | EER | TAR@FAR1% | Observação |
-|---|---|---|---|---|---|---|---|
-| [E01](experiments/E01-baseline.md) | sem fine-tuning | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | baseline |
-| | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | FAR 0,67% no LFW |
-| [E02](experiments/E02-finetuning-parcial.md) | parcial / ArcFace | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | treino piorou a validação; melhor época = aquecimento (= E01) |
-| | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 3,5 min |
-| [E03](experiments/E03-finetuning-completo.md) | completo / ArcFace | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | piorou mais que o E02 (EER 3,37% na época 5); melhor época = aquecimento |
-| | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 4,6 min |
-| **[E05](experiments/E05-triplet-loss.md)** | parcial / Triplet semi-hard | CelebA-val | 97,13% | 0,9708 | **2,57%** | 95,27% | **vencedor pela validação** |
-| | | LFW | 99,05% (10 folds: 99,17% ± 0,38%) | 0,9905 | 0,83% | 99,30% | FAR 1,40% no LFW (acima do alvo); treino 0,9 min |
-| [E04](experiments/E04-dataset-privado.md) | E05 + protótipo | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 64% (rodízio) e 97,0% (LFW) |
-| | E05 + k-NN (k = 1) | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 60% (rodízio) e 95,6% (LFW) |
+| Experimento | Modelo | Estratégia / perda | Dataset | Accuracy | F1 | EER | TAR@FAR1% | Observação |
+|---|---|---|---|---|---|---|---|---|
+| [E01](experiments/E01-baseline.md) | InceptionResnetV1 (VGGFace2) | sem fine-tuning | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | baseline |
+| | | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | FAR 0,67% no LFW |
+| [E02](experiments/E02-finetuning-parcial.md) | InceptionResnetV1 (VGGFace2) | parcial / ArcFace | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | treino piorou a validação; melhor época = aquecimento (= E01) |
+| | | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 3,5 min |
+| [E03](experiments/E03-finetuning-completo.md) | InceptionResnetV1 (VGGFace2) | completo / ArcFace | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | piorou mais que o E02 (EER 3,37% na época 5); melhor época = aquecimento |
+| | | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 4,6 min |
+| **[E05](experiments/E05-triplet-loss.md)** | InceptionResnetV1 (VGGFace2) | parcial / Triplet semi-hard | CelebA-val | 97,13% | 0,9708 | **2,57%** | 95,27% | **vencedor pela validação** |
+| | | | LFW | 99,05% (10 folds: 99,17% ± 0,38%) | 0,9905 | 0,83% | 99,30% | FAR 1,40% no LFW (acima do alvo); treino 0,9 min |
+| [E04](experiments/E04-dataset-privado.md) | InceptionResnetV1 (VGGFace2) | E05 + protótipo | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 64% (rodízio) e 97,0% (LFW) |
+| | | E05 + k-NN (k = 1) | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 60% (rodízio) e 95,6% (LFW) |
 
 **Conclusão:** o modelo pré-treinado já é forte (99,27% no LFW). O fine-tuning com ArcFace em 900 identidades
 causou overfitting e não superou o baseline. A Triplet loss, de ajuste mais suave, teve o menor EER na validação

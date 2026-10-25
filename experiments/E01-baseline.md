@@ -45,11 +45,19 @@ Definidas antes de rodar (SPEC-001): EER, TAR @ FAR = 1%, ROC-AUC, accuracy e F1
 |---|---|---|
 | Accuracy (10 folds) | — | 99,27% ± 0,32% |
 | Accuracy / F1 no threshold da validação | 97,08% / 0,9703 | 99,33% / 0,9933 |
+| Precision / recall no threshold da validação | 98,96% / 95,17% | 99,33% / 99,33% |
 | EER | 2,82% | 0,65% |
 | TAR @ FAR = 1% | 95,17% | 99,47% |
 | ROC-AUC | 0,9928 | 0,9995 |
 | FAR / FRR no threshold da validação (0,400) | 1,00% / 4,83% | 0,67% / 0,67% |
 | Tempo por imagem | 3,5 ms | |
+
+Matriz de confusão no threshold da validação (0,400), em pares. "Positivo" = par da mesma pessoa:
+
+| | CelebA-val: previsto mesma | CelebA-val: previsto diferente | LFW: previsto mesma | LFW: previsto diferente |
+|---|---|---|---|---|
+| **Real: mesma pessoa** (3.000) | 2.855 (VP) | 145 (FN) | 2.980 (VP) | 20 (FN) |
+| **Real: pessoas diferentes** (3.000) | 30 (FP) | 2.970 (VN) | 20 (FP) | 2.980 (VN) |
 
 Gráficos: `reports/figures/E01-roc.png`, `reports/figures/E01-lfw-similaridade.png`.
 
@@ -62,8 +70,10 @@ Gráficos: `reports/figures/E01-roc.png`, `reports/figures/E01-lfw-similaridade.
   menores (178×218) e o domínio difere do VGGFace2 (maquiagem, poses de foto de celebridade). Por isso a
   validação separa melhor os experimentos do que o LFW, que está perto da saturação.
 - **O threshold generalizou:** escolhido para FAR = 1% no CelebA-val, deu FAR de 0,67% no LFW, dentro do alvo.
-- **Erros:** com 0,67% de FAR e 0,67% de FRR no LFW, sobram cerca de 40 pares errados em 6.000; a região de
-  sobreposição das duas distribuições aparece em `E01-lfw-similaridade.png`. Não inspecionamos imagens
-  individuais.
+- **Erros:** na validação, os erros são quase todos **falsas rejeições** (145 FN contra 30 FP). É efeito direto
+  do critério do threshold: travar o FAR em 1% empurra o threshold para cima, e o custo aparece como FRR de 4,83%.
+  No LFW, os 40 erros em 6.000 pares se dividem igualmente (20 FP, 20 FN), o que mostra que o threshold de 0,400
+  caiu perto do ponto de equilíbrio do LFW. A região de sobreposição das duas distribuições aparece em
+  `E01-lfw-similaridade.png`. Não inspecionamos imagens individuais.
 - **Custo:** nenhum treino; 3,5 ms por imagem na GPU.
 - **Limitações:** uma única seed para os pares de validação; o LFW perto da saturação esconde diferenças pequenas.

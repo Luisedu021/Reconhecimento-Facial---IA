@@ -52,7 +52,9 @@ Definidas antes de rodar (SPEC-001): as mesmas do E01, mais tempo de treino e pa
 | FAR / FRR no threshold da validação (0,400) | 1,00% / 4,83% | 0,67% / 0,67% |
 | Tempo de treino / parâmetros treináveis | 3,5 min / 2,98 M | |
 
-Os números são **idênticos aos do E01** porque o checkpoint escolhido foi o da época 1 (ver abaixo).
+Os números são **idênticos aos do E01** porque o checkpoint escolhido foi o da época 1 (ver abaixo), inclusive
+precision/recall (98,96% / 95,17% na validação; 99,33% / 99,33% no LFW) e a matriz de confusão (ver
+[E01](E01-baseline.md)).
 
 Evolução por época (`reports/E02-historico.csv`):
 

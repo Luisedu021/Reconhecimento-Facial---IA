@@ -42,7 +42,7 @@ Mesmas do E02.
 | Tempo de treino / parâmetros treináveis | 4,6 min / 23,9 M | |
 
 Como no E02, o checkpoint escolhido foi o da época 1 (aquecimento, backbone intacto), por isso os números
-coincidem com os do E01.
+coincidem com os do E01, inclusive precision/recall e a matriz de confusão (ver [E01](E01-baseline.md)).
 
 Evolução por época (`reports/E03-historico.csv`), comparada ao E02:
 

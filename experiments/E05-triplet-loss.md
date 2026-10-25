@@ -43,8 +43,20 @@ accuracy em 10 folds, EER e FAR/FRR com o threshold da validação no LFW; tempo
 | EER | **2,57%** | 0,83% |
 | TAR @ FAR = 1% | 95,27% | 99,30% |
 | ROC-AUC | 0,9943 | 0,9994 |
+| Accuracy / F1 no threshold da validação | 97,13% / 0,9708 | 99,05% / 0,9905 |
+| Precision / recall no threshold da validação | 98,96% / 95,27% | 98,61% / 99,50% |
 | FAR / FRR no threshold da validação (0,450) | 1,00% / 4,73% | 1,40% / 0,50% |
 | Tempo de treino / parâmetros treináveis | 55 s / 2,52 M | |
+
+Matriz de confusão no threshold da validação (0,450), em pares. "Positivo" = par da mesma pessoa:
+
+| | CelebA-val: previsto mesma | CelebA-val: previsto diferente | LFW: previsto mesma | LFW: previsto diferente |
+|---|---|---|---|---|
+| **Real: mesma pessoa** (3.000) | 2.858 (VP) | 142 (FN) | 2.985 (VP) | 15 (FN) |
+| **Real: pessoas diferentes** (3.000) | 30 (FP) | 2.970 (VN) | 42 (FP) | 2.958 (VN) |
+
+Comparado ao E01 no LFW: 5 falsas rejeições a menos (15 contra 20) e 22 falsas aceitações a mais (42 contra 20).
+O total de erros sobe de 40 para 57, e o tipo de erro muda para o mais grave no cenário (aceitar um estranho).
 
 Evolução por época (`reports/E05-historico.csv`):
 

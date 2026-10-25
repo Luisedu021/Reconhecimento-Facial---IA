@@ -44,7 +44,7 @@ mineração semi-hard, checkpoint da época 5, **threshold 0,450** (FAR = 1% em 
 |---|---|
 | Memória de treino medida (dados aleatórios, AMP) | fine-tuning parcial com batch 64: 0,33 GB; completo com batch 32: 0,96 GB |
 | Tempo por passo de treino | ~0,28 s (parcial, batch 64); ~0,23 s (completo, batch 32) |
-| Testes do pipeline | 33 testes com dados sintéticos passando |
+| Testes do pipeline | 34 testes com dados sintéticos passando |
 | EER em CelebA-val: E01 / E02 / E03 / **E05** | 2,82% / 2,82% / 2,82% / **2,57%** |
 | TAR @ FAR = 1% em CelebA-val: E01 / E02 / E03 / E05 | 95,17% / 95,17% / 95,17% / 95,27% |
 | Acurácia no LFW (10 folds): E01 / E02 / E03 / E05 | 99,27% / 99,27% / 99,27% / 99,17% (± 0,32–0,38%) |

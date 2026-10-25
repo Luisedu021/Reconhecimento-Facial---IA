@@ -72,7 +72,7 @@ variação de cor). A melhor época é a de menor EER na validação. Valores fi
 
 ## Métricas
 
-- **Verificação (CelebA-val, LFW):** accuracy, F1, ROC-AUC, EER e TAR @ FAR = 1%; curva ROC e histograma
+- **Verificação (CelebA-val, LFW):** accuracy, precision, recall, F1, matriz de confusão (pares), ROC-AUC, EER e TAR @ FAR = 1%; curva ROC e histograma
   de similaridade mesma pessoa × pessoas diferentes.
 - **Identificação (privado):** acerto rank-1 das pessoas cadastradas; taxa de rejeição correta das
   desconhecidas; FAR e FRR no threshold escolhido.
@@ -111,7 +111,8 @@ variação de cor). A melhor época é a de menor EER na validação. Valores fi
 | CA-7, CA-8 | `tests/test_reproducibility.py` | passando |
 | RF-2 (lote com imagem sem rosto) | `tests/test_preprocess.py::test_lote_com_imagem_sem_rosto_nao_quebra` | passando |
 
-Execução de 2026-10-25: 33 testes passando (`pytest`).
+Execução de 2026-10-25: 34 testes passando (`pytest`). CA-7 também conferido com dados reais: a reexecução das
+avaliações de E01, E02, E03 e E05 reproduziu exatamente as mesmas métricas.
 
 ## Em aberto
 
