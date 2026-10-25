@@ -125,9 +125,10 @@ foto → [MTCNN: detecta e recorta] → rosto 160×160 → [InceptionResnetV1] �
 | **E02** | **Fine-tuning parcial:** treina só `block8` + `last_linear` + `last_bn`, com ArcFace | Melhora os embeddings sem "esquecer" o que já sabe. |
 | **E03** | **Fine-tuning completo:** a rede inteira, com LR 10× menor no backbone | Adapta mais, mas custa mais e arrisca overfitting. |
 | **E05** | Igual ao E02, mas com **Triplet loss** no lugar da ArcFace (opcional na spec) | A triplet gera embeddings **piores** que a ArcFace. |
-| **E04** | O vencedor pela validação, no **dataset privado** | Funciona nas selfies reais e rejeita desconhecidos. |
+| **E06** | E05 com **15 épocas** (adendo da spec, registrado antes de rodar) | Mais épocas baixam o EER, porque a curva do E05 ainda descia. |
+| **E04** | O vencedor pela validação, no **dataset privado**, com análise de sensibilidade do threshold | Funciona nas selfies reais e rejeita desconhecidos. |
 
-Tudo o que muda entre os experimentos está nos YAML (`configs/e01.yaml` … `e05.yaml`). O que é comum fica em
+Tudo o que muda entre os experimentos está nos YAML (`configs/e01.yaml` … `e06.yaml`). O que é comum fica em
 `configs/base.yaml`. Seed fixa (42) para tudo ser reproduzível.
 
 **Por que essa progressão?** É a pergunta clássica de transfer learning: *quanto* da rede ajustar?
@@ -252,7 +253,8 @@ Todas partem de pares com uma **similaridade** e um rótulo (mesma pessoa ou nã
 | E01 | 2,82% | 95,17% | 99,27% ± 0,32% | 0,67% / 0,67% (thr 0,400) | 0 | — |
 | E02 | 2,82%* | 95,17%* | 99,27%* | 0,67% / 0,67%* | 2,98 M | 3,5 min |
 | E03 | 2,82%* | 95,17%* | 99,27%* | 0,67% / 0,67%* | 23,9 M | 4,6 min |
-| **E05** | **2,57%** | 95,27% | 99,17% ± 0,38% | 1,40% / 0,50% (thr 0,450) | 2,52 M | 0,9 min |
+| E05 | 2,57% | 95,27% | 99,17% ± 0,38% | 1,40% / 0,50% (thr 0,450) | 2,52 M | 0,9 min |
+| **E06** | **2,38%** | **96,27%** | **99,37% ± 0,41%** | 1,40% / 0,60% (thr 0,439) | 2,52 M | 2,9 min |
 
 \* Melhor época = aquecimento (backbone intacto), por isso igual ao E01.
 
@@ -263,6 +265,9 @@ EER na validação por época (a curva mais importante para entender os resultad
 | E02 (ArcFace, parcial) | 2,82% (aquec.) | 2,93% | 3,00% | 3,18% | 3,07% |
 | E03 (ArcFace, completo) | 2,82% (aquec.) | 3,12% | 3,12% | 3,12% | 3,37% |
 | E05 (Triplet, parcial) | 2,93% | 2,83% | 2,65% | 2,72% | **2,57%** |
+
+E06 (épocas 1–5 idênticas às do E05, mesma seed): 6 → 2,57% · 7 → 2,40% · 8 → 2,53% · **9 → 2,38%** ·
+10 → 2,62% · 11 → 2,77% · 12 → 2,78% · 13 → 2,87% · 14 → 2,72% · 15 → 2,80%.
 
 **Interpretação:**
 
@@ -275,37 +280,48 @@ EER na validação por época (a curva mais importante para entender os resultad
    nunca virou o modelo final.
 4. **Triplet melhorou (E05):** a única configuração abaixo do baseline na validação (2,57%), e a mais barata
    (55 s). A hipótese do E05 ("triplet pior que ArcFace") foi **refutada**, e isso é um resultado legítimo.
-5. **Mas o ganho é pequeno:** 0,25 p.p., da ordem do erro amostral (≈ 0,3 p.p.), e não apareceu no LFW
-   (99,17% contra 99,27%, dentro do desvio entre folds; FAR de 1,40%, acima do alvo de 1%).
-6. **Limitações:** uma seed, 5 épocas, 1.000 identidades, um backbone; LFW perto da saturação; dataset privado
-   pequeno (5 pessoas, 15 consultas: as taxas têm muita incerteza).
+5. **Mas o ganho do E05 era pequeno:** 0,25 p.p., da ordem do erro amostral (≈ 0,3 p.p.), e não apareceu no LFW
+   (99,17% contra 99,27%).
+6. **Mais épocas (E06) resolveram:** a curva do E05 ainda descia; com 15 épocas, o melhor ponto foi a época 9
+   (2,38%), e depois veio overfitting (até 2,87%), descartado pela seleção. Desta vez o ganho também apareceu no
+   LFW: 99,37% e EER 0,63%, os dois melhores que o baseline, ainda dentro do desvio entre folds.
+7. **O threshold transfere mal:** FAR de 1,40% no LFW com o threshold da validação, acima do alvo de 1%.
+8. **Limitações:** uma seed, 1.000 identidades, um backbone; a melhor época foi escolhida entre 15 avaliações;
+   LFW perto da saturação; dataset privado pequeno (5 pessoas, 15 consultas: as taxas têm muita incerteza).
 
-**E04: dataset privado**
+**E04: dataset privado** (modelo E06, threshold 0,439)
 
 | Métrica (agregada) | Protótipo | k-NN |
 |---|---|---|
 | Rank-1 / FRR | 100% / 0% | 100% / 0% |
-| Rejeição de desconhecidos (rodízio) | 64% | 60% |
+| Rejeição de desconhecidos (rodízio) | 56% | 56% |
 | Rejeição de desconhecidos (LFW) | 97,0% | 95,6% |
 | AUC / EER | 1,00 / 0% | 1,00 / 0% |
 
+Sensibilidade (protótipo, só análise): FAR do rodízio 72% em 0,30 · 44% em 0,45 · 36% em 0,50–0,60 · 28% em
+0,70 · 4% em 0,75 · 0% em 0,80 (mas aí o FRR sobe para 13%).
+
 - **Reconhecer funcionou:** as 15 consultas (fotos de outro dia, com variações) foram para a pessoa certa.
-- **Rejeitar desconhecidos não funcionou bem:** 36–40% dos participantes fora do cadastro passaram do threshold.
-- **A causa é o threshold, não o modelo:** AUC 1,0 quer dizer que existe um valor que separa tudo; o 0,450,
-  escolhido em fotos de celebridades, fica baixo demais para selfies (mudança de domínio, ADR-003).
-- **Por que não ajustamos com essas fotos?** São teste (item 29, CA-5). A correção vai para a Parte 2: escolher de
-  novo na validação, com FAR ≤ 0,1%.
+- **Rejeitar desconhecidos não funcionou bem:** 44% dos participantes fora do cadastro passaram do threshold.
+- **A causa é o threshold, não o modelo:** AUC 1,0 quer dizer que existe um valor que separa as consultas; o
+  0,439, escolhido em fotos de celebridades, fica baixo demais para selfies (mudança de domínio, ADR-003). A curva
+  de sensibilidade mostra o tamanho do problema: nesta amostra, só perto de 0,75 o FAR entre participantes cai.
+- **Erros concentrados:** a curva tem patamares e cai de uma vez entre 0,70 e 0,75, e o histograma mostra um
+  grupinho isolado de pares de pessoas diferentes perto de 0,70. Poucos pares de participantes parecidos (ou
+  fotografados em condições quase iguais) concentram os erros.
+- **Por que não ajustamos para 0,75?** Porque esse valor foi observado no teste (item 29, CA-5). A correção vai
+  para a Parte 2: escolher de novo na validação, com FAR ≤ 0,1%.
 - **Ressalva obrigatória:** 5 pessoas e 15 consultas; uma foto muda a taxa em 4 a 7 pontos.
 
 **Escolha do modelo**
 
-- Vencedor = **menor EER em CelebA-val** → **E05** (Triplet, fine-tuning parcial, threshold 0,450).
-  Registrado no ADR-001 e usado no E04 e na Parte 2.
-- **Por que não escolher o E01, já que ele foi um pouco melhor no LFW?** Porque isso seria usar o teste para
-  escolher o modelo (item 29). O critério foi definido **antes** dos experimentos, e trocá-lo depois de ver o
-  resultado do teste seria data leakage. O resultado do LFW é reportado como limitação, não usado na escolha.
-- Resumo em uma frase: *"escolhemos pela validação, não pelo teste; o LFW só confirma — e, neste caso,
-  ele mostrou que a vantagem é pequena"*.
+- Vencedor = **menor EER em CelebA-val** → **E06** (Triplet, fine-tuning parcial, 15 épocas, melhor época 9,
+  threshold 0,439). Registrado no ADR-001 e usado no E04 e na Parte 2.
+- **O E06 não foi "escolhido olhando o teste"?** Não: ele foi motivado pela curva de **validação** do E05, que ainda
+  descia, e registrado na spec antes de rodar. O critério de escolha não mudou.
+- **E se o LFW tivesse dado pior?** Seria reportado como limitação, sem mudar a escolha, como aconteceu com o E05.
+  Escolher pelo teste seria data leakage (item 29).
+- Resumo em uma frase: *"escolhemos pela validação, não pelo teste; o LFW só confirma"*.
 
 ---
 
@@ -339,5 +355,6 @@ EER na validação por época (a curva mais importante para entender os resultad
 9. O que é data leakage e quais três cuidados tomamos contra ele?
 10. Por que o dataset privado é separado por sessão?
 11. Por que o fine-tuning com ArcFace piorou e o com Triplet melhorou?
-12. Por que o E05 foi escolhido mesmo tendo um resultado um pouco pior no LFW?
-13. No E04, como o AUC pode ser 1,0 se 36% dos desconhecidos foram aceitos?
+12. Por que o E06 existe, e por que ele não é "escolher olhando o teste"?
+13. No E04, como o AUC pode ser 1,0 se 44% dos desconhecidos foram aceitos?
+14. O que a curva de sensibilidade mostra, e por que não usamos o threshold de 0,75 que ela sugere?

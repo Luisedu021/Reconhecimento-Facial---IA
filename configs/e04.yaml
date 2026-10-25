@@ -1,8 +1,10 @@
 base: base.yaml
 experiment: E04
 hypothesis: >-
-  O melhor modelo de E01-E03 e E05, com o threshold escolhido na validação do CelebA,
+  O melhor modelo de E01-E03, E05 e E06, com o threshold escolhido na validação do CelebA,
   reconhece as pessoas cadastradas e rejeita desconhecidos também nas selfies reais.
-# Vencedor na validação (menor EER em CelebA-val: 2,57%), registrado no ADR-001.
-source_config: configs/e05.yaml
+# Vencedor na validação (menor EER em CelebA-val: 2,38%, E06), registrado no ADR-001.
+source_config: configs/e06.yaml
 methods: [prototype, knn1]
+# Análise de sensibilidade (CA-9): grade FIXA, só para mostrar o impacto do threshold. Nenhum valor é escolhido daqui.
+sensitivity: {start: 0.30, stop: 0.80, step: 0.05}

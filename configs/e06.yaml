@@ -1,0 +1,7 @@
+base: e05.yaml
+experiment: E06
+hypothesis: >-
+  Mais épocas de Triplet loss (15 em vez de 5) reduzem o EER em CelebA-val abaixo dos 2,57%
+  do E05, cuja curva de validação ainda descia na última época.
+train:
+  epochs: 15

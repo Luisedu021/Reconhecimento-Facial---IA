@@ -85,3 +85,5 @@ Gráficos: `reports/figures/E05-roc.png`, `reports/figures/E05-lfw-similaridade.
 - **Custo:** o mais barato dos fine-tunings (55 s, contra 3,5 min do E02 e 4,6 min do E03), porque não há
   cabeça de 900 classes e a perda é calculada só dentro do batch.
 - **Limitações:** uma seed, 5 épocas, um valor de margem; diferenças no LFW perto da saturação (> 99%).
+- **Continuação:** como a curva ainda descia, o [E06](E06-triplet-15-epocas.md) repetiu esta configuração com
+  15 épocas e superou o E05 (EER 2,38% na validação); o E06 passou a ser o modelo escolhido.

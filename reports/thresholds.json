@@ -22,5 +22,11 @@
     "criterion": "far",
     "far_target": 0.01,
     "chosen_on": "celeba-val"
+  },
+  "E06": {
+    "threshold": 0.4385853409767151,
+    "criterion": "far",
+    "far_target": 0.01,
+    "chosen_on": "celeba-val"
   }
 }

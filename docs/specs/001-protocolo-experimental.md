@@ -1,6 +1,6 @@
 # SPEC-001 — Protocolo experimental da Parte 1
 
-- **Status:** implementada (E01–E05 executados em 2026-10-25)
+- **Status:** implementada (E01–E06 executados em 2026-10-25)
 - **Parte:** 1 (experimentação)
 - **Responsáveis:** Luís Eduardo Lopes dos Santos, Gustavo Borges Machado
 - **Relacionados:** [ADR-001](../decisions/ADR-001-face-model.md) (modelo), [ADR-003](../decisions/ADR-003-recognition-threshold.md) (threshold), E01–E05, [requirements.md](../requirements.md)
@@ -59,11 +59,27 @@ Nenhuma escolha (modelo, hiperparâmetro, threshold) usa o LFW nem o dataset pri
 | E01 | InceptionResnetV1 pré-treinado (VGGFace2), sem fine-tuning (baseline) | CelebA-val | LFW |
 | E02 | Fine-tuning parcial: só o último bloco e a camada de embedding treinam; ArcFace loss | CelebA-val | LFW |
 | E03 | Fine-tuning completo: toda a rede treina, learning rate menor no backbone; ArcFace loss | CelebA-val | LFW |
-| E04 | Melhor modelo de E01–E03 e E05 pela validação: protótipo (média do cadastro) + cosseno × k-NN (k = 1); threshold de CelebA-val | — | privado (agregado) |
+| E04 | Melhor modelo de E01–E03, E05 e E06 pela validação: protótipo (média do cadastro) + cosseno × k-NN (k = 1); threshold de CelebA-val | — | privado (agregado) |
 | E05 | _Opcional (executado):_ E02 com Triplet loss (mineração semi-hard) | CelebA-val | LFW |
 
 O E05 usa o mesmo protocolo e o mesmo critério de escolha, por isso concorre com E01–E03. Resultado: o E05
 teve o menor EER em CelebA-val e é o modelo do E04 ([ADR-001](../decisions/ADR-001-face-model.md)).
+
+**Adendo de 2026-10-25 (registrado antes de rodar):**
+
+| ID | Configuração | Validação | Teste |
+|---|---|---|---|
+| E06 | E05 com 15 épocas em vez de 5 (a curva de validação do E05 ainda descia na época 5) | CelebA-val | LFW |
+
+- Hipótese do E06: mais épocas de Triplet loss reduzem o EER em CelebA-val abaixo dos 2,57% do E05.
+- O E06 concorre com o mesmo critério (menor EER em CelebA-val). Se vencer, passa a ser o modelo do E04, com o
+  threshold dele, também escolhido na validação.
+- **Análise de sensibilidade do threshold (E04):** além do threshold oficial, o E04 passa a reportar as taxas
+  agregadas (FRR, FAR no rodízio, FAR com rostos do LFW) para uma grade fixa de thresholds definida na config
+  (0,30 a 0,80, passo 0,05). É só análise do impacto do threshold (item 33): **nenhum valor é escolhido** com
+  esses dados (CA-5).
+- **Resultado:** o E06 teve EER de 2,38% em CelebA-val (melhor época 9), superou o E05 e passou a ser o modelo do
+  E04 ([ADR-001](../decisions/ADR-001-face-model.md)). A sensibilidade foi gravada em `reports/E04-sensibilidade.csv`.
 
 Hiperparâmetros iniciais: AdamW, learning rate 1e-3 na cabeça ArcFace (pesos novos), 1e-4 nas camadas finais
 e 1e-5 no restante do backbone (E03); batch 64 em todos (medido: 0,33 GB no E02 e ~1 GB no E03); 5 épocas, sendo a primeira
@@ -88,6 +104,7 @@ variação de cor). A melhor época é a de menor EER na validação. Valores fi
 - **CA-6:** **Dado** o script de avaliação privada, **quando** gera a saída, **então** ela não contém IDs, nomes, caminhos de arquivo nem embeddings.
 - **CA-7:** **Dado** o mesmo YAML e a mesma seed, **quando** um experimento roda duas vezes, **então** as métricas coincidem (tolerância de 0,5 ponto percentual com AMP).
 - **CA-8:** **Dado** um experimento concluído, **quando** `results.csv` é lido, **então** a linha tem seed, versões, hiperparâmetros e hardware.
+- **CA-9:** **Dado** a análise de sensibilidade do E04, **quando** ela roda, **então** cada linha tem só o threshold da grade e taxas agregadas, as taxas variam de forma monotônica com o threshold, e nenhum threshold é escolhido a partir delas.
 
 ## Plano de implementação
 
@@ -110,8 +127,9 @@ variação de cor). A melhor época é a de menor EER na validação. Valores fi
 | CA-5, CA-6 | `tests/test_evaluate_private.py::test_saida_agregada` | passando |
 | CA-7, CA-8 | `tests/test_reproducibility.py` | passando |
 | RF-2 (lote com imagem sem rosto) | `tests/test_preprocess.py::test_lote_com_imagem_sem_rosto_nao_quebra` | passando |
+| CA-9 | `tests/test_evaluate_private.py::test_sensibilidade_agregada_e_monotonica` | passando |
 
-Execução de 2026-10-25: 34 testes passando (`pytest`). CA-7 também conferido com dados reais: a reexecução das
+Execução de 2026-10-25: 37 testes passando (`pytest`). CA-7 também conferido com dados reais: a reexecução das
 avaliações de E01, E02, E03 e E05 reproduziu exatamente as mesmas métricas.
 
 ## Em aberto

@@ -44,10 +44,11 @@ Configuração: `threshold.criterion: far` e `threshold.far_target: 0.01` em `co
 
 | Evidência | Valor |
 |---|---|
-| Threshold escolhido em CelebA-val (modelo do ADR-001: E05) | **0,450** (FAR 1,00%, FRR 4,73% na validação) — `reports/thresholds.json` |
-| LFW com esse threshold: FAR / FRR | 1,40% / 0,50% (acima do alvo de 1%; para comparação, o E01 com 0,400 deu 0,67% / 0,67%) |
-| Dataset privado com esse threshold: rejeição de desconhecidos / FRR (agregado, [E04](../../experiments/E04-dataset-privado.md)) | rodízio: 64% (protótipo) e 60% (k-NN), ou seja FAR de 36–40%; LFW como desconhecido: 97,0% / 95,6%; FRR 0% nos dois (5 pessoas, 15 consultas) |
-| Gráficos | `reports/figures/<experimento>-roc.png` e `-lfw-similaridade.png` |
+| Threshold escolhido em CelebA-val (modelo do ADR-001: E06) | **0,4386** (FAR 1,00%, FRR 3,73% na validação) — `reports/thresholds.json` |
+| LFW com esse threshold: FAR / FRR | 1,40% / 0,60% (acima do alvo de 1%; para comparação, o E01 com 0,400 deu 0,67% / 0,67%) |
+| Dataset privado com esse threshold: rejeição de desconhecidos / FRR (agregado, [E04](../../experiments/E04-dataset-privado.md)) | rodízio: 56% (protótipo e k-NN), ou seja FAR de 44%; LFW como desconhecido: 97,0% / 95,6%; FRR 0% nos dois (5 pessoas, 15 consultas) |
+| Sensibilidade no dataset privado (só análise, CA-9) | FAR do rodízio: 44% em 0,45, 36% em 0,50–0,60, 28% em 0,70, 0–4% em 0,75; FRR só sobe em 0,80 (13%). FAR com rostos do LFW < 1% a partir de 0,50 — `reports/E04-sensibilidade.csv` |
+| Gráficos | `reports/figures/<experimento>-roc.png`, `-lfw-similaridade.png`, `E04-privado-similaridade.png` e `E04-sensibilidade-threshold.png` |
 
 ## Consequências
 
@@ -57,12 +58,14 @@ Configuração: `threshold.criterion: far` e `threshold.far_target: 0.01` em `co
 - **Negativas e riscos:**
   - **Mudança de domínio:** um threshold ajustado em fotos de celebridades pode não valer para selfies. O E04
     mede exatamente isso e, se o efeito for grande, vira uma limitação a discutir (item 33).
-  - Já no LFW o efeito apareceu: o threshold do E05 deu FAR de 1,40%, acima do alvo. O valor **não** foi
-    reajustado no LFW (item 29); fica registrado como limitação.
-  - **No dataset privado o efeito foi grande:** 36–40% dos participantes fora do cadastro foram aceitos como
-    outro participante, embora as similaridades tenham separado perfeitamente mesma pessoa × pessoas diferentes
-    (AUC = 1,0). O modelo discrimina; o threshold de celebridades é que fica baixo demais para selfies. Ele
-    **não** foi reajustado com as fotos privadas (CA-5).
+  - Já no LFW o efeito apareceu: os thresholds do E05 e do E06 deram FAR de 1,40%, acima do alvo. O valor
+    **não** foi reajustado no LFW (item 29); fica registrado como limitação.
+  - **No dataset privado o efeito foi grande:** 44% dos participantes fora do cadastro foram aceitos como outro
+    participante (36–40% com o E05), embora as consultas S2 tenham separado perfeitamente mesma pessoa × pessoas
+    diferentes (AUC = 1,0). A análise de sensibilidade mostra que, nesta amostra, o FAR entre participantes só cai
+    perto de 0,75, longe do 0,439 escolhido em celebridades. Esse valor **não** foi adotado: foi observado no
+    teste (CA-5).
   - **Revisão prevista para a Parte 2:** escolher de novo na validação do CelebA com um critério mais rígido
-    (por exemplo FAR ≤ 0,1%) e registrar a mudança como nova versão deste ADR, citando o E04 como motivação.
+    (por exemplo FAR ≤ 0,1%) e registrar a mudança como nova versão deste ADR, citando o E04 como motivação. Se
+    ainda não bastar, buscar uma validação pública mais parecida com selfies.
 - **Privacidade:** nenhum dado privado participa da escolha.

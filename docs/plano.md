@@ -24,7 +24,7 @@ O teste de "desconhecido" usa rodízio: cada pessoa fica uma vez fora do cadastr
 Modelo, hiperparâmetros e threshold são escolhidos na **validação do CelebA** (identidades fora do treino).
 LFW e dataset privado são só **teste** (item 29). Detalhes em [SPEC-001](specs/001-protocolo-experimental.md).
 
-**Experimentos** (modelo final decidido no ADR-001: **E05**, menor EER na validação):
+**Experimentos** (modelo final decidido no ADR-001: **E06**, menor EER na validação):
 
 | ID | Configuração | Teste |
 |---|---|---|
@@ -33,6 +33,7 @@ LFW e dataset privado são só **teste** (item 29). Detalhes em [SPEC-001](specs
 | E03 | Fine-tuning completo, mesma configuração do E02 | LFW |
 | E04 | Melhor modelo: protótipo/cosseno × k-NN, threshold da validação, "desconhecido" | dataset privado (agregado) |
 | E05 | _Opcional (executado):_ E02 com Triplet loss no lugar da ArcFace | LFW |
+| E06 | _Adendo (executado):_ E05 com 15 épocas; vencedor | LFW |
 
 ## Cronograma
 

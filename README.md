@@ -67,8 +67,10 @@ python -m facerec.train    --config configs/e02.yaml
 python -m facerec.evaluate --config configs/e02.yaml
 python -m facerec.train    --config configs/e03.yaml
 python -m facerec.evaluate --config configs/e03.yaml
-python -m facerec.train    --config configs/e05.yaml   # opcional na SPEC-001; vencedor (ADR-001)
+python -m facerec.train    --config configs/e05.yaml   # opcional na SPEC-001
 python -m facerec.evaluate --config configs/e05.yaml
+python -m facerec.train    --config configs/e06.yaml   # adendo da SPEC-001; vencedor (ADR-001)
+python -m facerec.evaluate --config configs/e06.yaml
 
 # 3. Dataset privado (local, saída só agregada)
 python -m facerec.preprocess --dataset private
@@ -108,18 +110,20 @@ Seed 42, RTX A1000 4 GB. Dados completos em [reports/results.csv](reports/result
 | | | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 3,5 min |
 | [E03](experiments/E03-finetuning-completo.md) | InceptionResnetV1 (VGGFace2) | completo / ArcFace | CelebA-val | 97,08% | 0,9703 | 2,82% | 95,17% | piorou mais que o E02 (EER 3,37% na época 5); melhor época = aquecimento |
 | | | | LFW | 99,33% (10 folds: 99,27% ± 0,32%) | 0,9933 | 0,65% | 99,47% | treino 4,6 min |
-| **[E05](experiments/E05-triplet-loss.md)** | InceptionResnetV1 (VGGFace2) | parcial / Triplet semi-hard | CelebA-val | 97,13% | 0,9708 | **2,57%** | 95,27% | **vencedor pela validação** |
-| | | | LFW | 99,05% (10 folds: 99,17% ± 0,38%) | 0,9905 | 0,83% | 99,30% | FAR 1,40% no LFW (acima do alvo); treino 0,9 min |
-| [E04](experiments/E04-dataset-privado.md) | InceptionResnetV1 (VGGFace2) | E05 + protótipo | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 64% (rodízio) e 97,0% (LFW) |
-| | | E05 + k-NN (k = 1) | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 60% (rodízio) e 95,6% (LFW) |
+| [E05](experiments/E05-triplet-loss.md) | InceptionResnetV1 (VGGFace2) | parcial / Triplet semi-hard, 5 épocas | CelebA-val | 97,13% | 0,9708 | 2,57% | 95,27% | primeira a superar o baseline; curva ainda descia |
+| | | | LFW | 99,05% (10 folds: 99,17% ± 0,38%) | 0,9905 | 0,83% | 99,30% | FAR 1,40% no LFW; treino 0,9 min |
+| **[E06](experiments/E06-triplet-15-epocas.md)** | InceptionResnetV1 (VGGFace2) | parcial / Triplet semi-hard, 15 épocas | CelebA-val | 97,63% | 0,9760 | **2,38%** | 96,27% | **vencedor pela validação** (melhor época: 9) |
+| | | | LFW | 99,00% (10 folds: **99,37%** ± 0,41%) | 0,9900 | **0,63%** | 99,37% | melhor que o baseline no LFW; FAR 1,40% (acima do alvo); treino 2,9 min |
+| [E04](experiments/E04-dataset-privado.md) | InceptionResnetV1 (VGGFace2) | E06 + protótipo | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 56% (rodízio) e 97,0% (LFW) |
+| | | E06 + k-NN (k = 1) | privado (agregado, 5 pessoas) | rank-1 100% | — | 0% | — | FRR 0%; rejeição de desconhecidos 56% (rodízio) e 95,6% (LFW) |
 
 **Conclusão:** o modelo pré-treinado já é forte (99,27% no LFW). O fine-tuning com ArcFace em 900 identidades
-causou overfitting e não superou o baseline. A Triplet loss, de ajuste mais suave, teve o menor EER na validação
-e foi escolhida pelo critério definido antes dos experimentos. A vantagem é pequena (0,25 p.p.) e não se
-confirmou no LFW, o que está registrado como limitação no [ADR-001](docs/decisions/ADR-001-face-model.md).
-Nas selfies do grupo (E04), o modelo reconheceu 100% dos cadastrados e separou perfeitamente as pessoas
-(AUC = 1,0), mas o threshold escolhido em fotos de celebridades deixou passar 36–40% dos participantes fora do
-cadastro: a mudança de domínio prevista no [ADR-003](docs/decisions/ADR-003-recognition-threshold.md). O threshold
+causou overfitting e não superou o baseline. A Triplet loss, de ajuste mais suave, foi a única estratégia que
+melhorou: com 15 épocas (E06, melhor época 9) chegou a 2,38% de EER na validação e 99,37% no LFW, e foi escolhida
+pelo critério definido antes dos experimentos. Nas selfies do grupo (E04), o modelo reconheceu 100% dos
+cadastrados e separou perfeitamente as pessoas (AUC = 1,0), mas o threshold escolhido em fotos de celebridades
+deixou passar 44% dos participantes fora do cadastro. A análise de sensibilidade mostra que o problema é a
+calibração do threshold entre domínios ([ADR-003](docs/decisions/ADR-003-recognition-threshold.md)). O threshold
 não foi reajustado com dados de teste; a revisão, na validação, fica para a Parte 2.
 
 Resultados do dataset privado são apresentados apenas de forma agregada, sem identificar participantes.

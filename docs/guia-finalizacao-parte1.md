@@ -50,10 +50,10 @@ Nesta ordem, cerca de 1 a 2 horas no total:
 .venv\Scripts\python -m facerec.evaluate --config configs/e01.yaml; .venv\Scripts\python -m facerec.train --config configs/e02.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e02.yaml; .venv\Scripts\python -m facerec.train --config configs/e03.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e03.yaml
 ```
 
-E05 (opcional na SPEC-001, executado; foi o vencedor):
+E05 (opcional na SPEC-001) e E06 (adendo; foi o vencedor):
 
 ```bash
-.venv\Scripts\python -m facerec.train --config configs/e05.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e05.yaml
+.venv\Scripts\python -m facerec.train --config configs/e05.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e05.yaml; .venv\Scripts\python -m facerec.train --config configs/e06.yaml; .venv\Scripts\python -m facerec.evaluate --config configs/e06.yaml
 ```
 
 Os resultados vão para `reports/results.csv`, `reports/thresholds.json` e `reports/figures/`.
